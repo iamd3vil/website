@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="posts">
+  <h3> {{ term.name | capitalize }} </h3>
   {% for post in term.pages %}
     <div class="post">
       <div class="post-header">
