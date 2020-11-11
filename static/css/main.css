@@ -1,0 +1,152 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700&display=swap');
+
+:root {
+    --color-primary: #14854F;
+    --grid-maxWidth: 100rem;
+}
+
+body {
+    font-family: Ubuntu;
+    max-width: 87.5% (or 50em);
+    margin: 0 auto;
+    line-height: 1.6em;
+}
+
+::-moz-selection {
+    background: var(--color-primary);
+    text-shadow: none;
+    color: #fff;
+}
+
+::selection {
+    background: var(--color-primary);
+    text-shadow: none;
+    color: #fff;
+}
+
+.container {
+    margin-bottom: 40px !important;
+}
+
+.about {
+    padding-top: 2rem;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.header ul {
+    list-style: none inside;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.header li {
+    padding-right: 10px;
+}
+
+.header {
+    line-height: 0.2em;
+    margin-bottom: 20px;
+    /* padding-bottom: 5px; */
+    padding-top: 20px;
+}
+
+.footer {
+    text-align: right;
+    font-size: 0.75em;
+    color: #999;
+    border-top: 1px solid #f4f4f4;
+    margin-top: 40px;
+    padding: 15px 0;
+}
+.footer a {
+    color: #666;
+}
+
+.footer a:hover {
+    color: var(--color-primary);
+}
+
+.nav ul {
+    list-style: none inside;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.nav li {
+    float: left;
+}
+
+.nav a {
+    color: var(--color-primary);
+}
+
+.post .post-header {
+    margin-bottom: 30px;
+}
+.post-header {
+    display: flex;
+}
+
+.post-header .meta .date {
+    margin-right: 30px;
+    width: 64px;
+    text-align: center;
+}
+
+.post-header .meta .date .day {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    line-height: 0.45em;
+    font-size: 3em;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.post-header .meta {
+    margin-top: 15px;
+}
+
+.post-content {
+    padding-top: 10px;
+}
+
+.post {
+    padding-top: 3rem;
+}
+
+
+.tag-cloud {
+    margin-top: 20px;
+}
+  
+.tag-cloud li {
+    display: inline;
+    list-style-type: none;
+    padding-right: 20px;
+}
+
+pre,
+textarea {
+    overflow: auto;
+}
+
+img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+}
+
+pre {
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 20px;
+}
+
+.nav .active {
+    text-decoration: underline;
+}
