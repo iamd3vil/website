@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "https://website-bice-one.vercel.app/"
+base_url = "https://website-bice-one.vercel.app"
 
 title = "Sarat Chandra"
 description = "Thoughts on Programming, Tech and Life."
