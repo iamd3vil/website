@@ -33,5 +33,9 @@ copyright = "Made By Sarat Chandra. Copyright 2020."
     link = "$BASE_URL/blog/"
 
     [[extra.links]]
+    title = "Projects"
+    link = "$BASE_URL/projects/"
+
+    [[extra.links]]
     title = "Tags"
     link = "$BASE_URL/tags/"

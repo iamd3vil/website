@@ -29,10 +29,6 @@ body {
     margin-bottom: 40px !important;
 }
 
-.about {
-    padding-top: 2rem;
-}
-
 a:hover {
     text-decoration: underline;
 }
