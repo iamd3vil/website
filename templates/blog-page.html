@@ -6,7 +6,7 @@
         <div class="meta">
           <div class="date">
             <span class="day"> {{ page.day }}</span>
-            <span class="rest"> {{ page.month}}/{{ page.year }} </span>
+            <span class="rest"> {{ page.date | date(format='%b') }} {{ page.year }} </span>
           </div>
         </div>
         <div class="matter">
@@ -19,6 +19,7 @@
     <p>{{ page.content | safe }}</p>
   </div>
 </div>
+{% if page.taxonomies["tags"] %}
 <div class="tags">
 <p>
   {% for tag in page.taxonomies["tags"] %}
@@ -27,4 +28,5 @@
   {% endfor %}
 </p>
 </div>
+{% endif %}
 {% endblock content %}
