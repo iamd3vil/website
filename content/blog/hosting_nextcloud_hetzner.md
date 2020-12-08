@@ -54,6 +54,8 @@ This should create a dataset called `tank/nextcloud` with `lz4` compression and 
 
 For managing the containers, `docker-compose` can be used. Here is the file I used for running Nextcloud.
 
+> Note: Replace all the variables in `{{ }}` with the correct values.
+
 ```yaml
 version: '3'
 services:
@@ -107,8 +109,6 @@ networks:
   db:
   nextcloud:
 ```
-
-> Note: Replace all the variables in `{{ }}` with the correct values.
 
 Here Caddy is used as the reverse proxy to Nextcloud so that TLS certificates are managed automatically. This should make your nextcloud available at `{{ nextcloud_domain }}`.
 
