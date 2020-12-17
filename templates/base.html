@@ -1,13 +1,23 @@
+{% import "macros/head.html" as head -%}
+{% import "macros/opengraph.html" as social -%}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="{{ config.description }}" />
-  <meta name="keywords" content="mrkaran, karan, karan sharma" />
-  <title>{{ config.title }}</title>
+  {%- block general_meta -%}
+    {{ head::general_meta() }}
+  {%- endblock general_meta -%}
+
+  {%- block og_preview -%}
+    {{ social::og_preview() }}
+  {%- endblock og_preview -%}
+
+  {% block rss %}
+    <link rel="alternate" type="application/rss+xml" title="{{config.title}}"
+    href="{{ get_url(path="index.xml", trailing_slash=false) | safe}}">
+  {% endblock %}
+
   <link rel="stylesheet" href="https://unpkg.com/chota@latest">
   <link rel="stylesheet" href="/css/main.css">
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>

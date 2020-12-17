@@ -15,6 +15,7 @@ highlight_code = true
 build_search_index = false
 
 generate_feed = true
+feed_filename = "index.xml"
 
 taxonomies = [ { name = "tags", rss = true } ]
 
