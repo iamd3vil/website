@@ -23,7 +23,7 @@ taxonomies = [ { name = "tags", rss = true } ]
 # Put all your custom variables here
 github = "iamd3vil"
 twitter = "iamd3vil"
-copyright = "Made By Sarat Chandra. Copyright 2020."
+copyright = "Made By Sarat Chandra. Copyright 2021."
 
     [[ extra.links ]]
     title = "Home"
