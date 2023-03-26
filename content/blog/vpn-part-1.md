@@ -3,6 +3,7 @@ title = "Creating a VPN in Go - Part 1"
 description = "Creating our own encrypted VPN in Go"
 date = 2020-04-03
 slug = "vpn_part_1"
+draft = true
 
 [taxonomies]
 tags = ["go", "golang", "vpn"]
@@ -54,6 +55,7 @@ func main() {
 	time.Sleep(10 * time.Minute)
 }
 ```
+
 We are using a `DeviceType` of `water.TUN` to create a TUN interface called `tun0`. We are using a `time.Sleep` so that the program doesn't exit and stays up. A better way to exit is to catch the termination signal. For now `time.Sleep` would suffice.
 
 We need `sudo` to run this.
@@ -210,7 +212,6 @@ for {
 }
 ```
 
-
 Instead of using `bufio` let's use [github.com/dolmen-go/contextio](github.com/dolmen-go/contextio) which provides a reader which can be cancelled when the program terminates. This is how our program looks like after adding context cancellation.
 
 ```go
@@ -316,7 +317,6 @@ func main() {
 
 Let's run this and ping the `192.168.9.11`. The pings will be routed through the interface, so the kernel will send the packets to the tunnel.
 If you ping `192.168.9.10`, the kernel will reply automatically to pings and the packets won't be sent to our program.
-
 
 ```bash
 $ ping 192.168.9.11
