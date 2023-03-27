@@ -15,7 +15,7 @@ Additionally, I discovered that Photoprism lacks a dedicated mobile app, and use
 
 While Nextcloud's auto-upload feature works seamlessly for us to back up our photos in their original quality, the features available in the Nextcloud Android app for viewing and managing photos are limited.
 
-That's when I found the [Photos app for nextcloud](https://play.google.com/store/apps/details?id=com.nkming.nc_photos.paid). This app was a gamechanger for us. The app can load photos from nextcloud and I noticed that it was very fast to browse unlike the original nextcloud app.
+That's when I found the [Photos app for nextcloud](https://play.google.com/store/apps/details?id=com.nkming.nc_photos.paid). As far as I know, this app is only available for android (no one uses iOS in my family, so this was fine). This app was a gamechanger for us. The app can load photos from nextcloud and I noticed that it was very fast to browse unlike the original nextcloud app.
 
 The features I liked are:
 
