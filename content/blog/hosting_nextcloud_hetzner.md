@@ -23,14 +23,13 @@ I have investigated and found that the probably the most cost effective, reliabl
 
 #### Setting up Hetzner VPS
 
-I used Ansible to setup the VPS. Since there is no Cloud Firewall provided by Hetzner, we need to setup our firewall using `ufw`. 
+I used Ansible to setup the VPS. Since there is no Cloud Firewall provided by Hetzner, we need to setup our firewall using `ufw`.
 
 We need to allow these ports:
 
 - `80` (http)
 - `443` (https)
 - `22` (ssh)
-
 
 > We are going to use Docker for setting up Nextcloud. One thing to keep in mind is that any forwarded ports will disobey `ufw` rules. This is a [known issue](https://github.com/docker/for-linux/issues/777) and there seems to be no official resolution close by. So we are only forwarding `80` & `443` and since these ports are anyways open, we are okay in this case.
 
@@ -57,7 +56,7 @@ For managing the containers, `docker-compose` can be used. Here is the file I us
 > Note: Replace all the variables in `{{ }}` with the correct values.
 
 ```yaml
-version: '3'
+version: "3"
 services:
   nextclouddb:
     image: postgres
@@ -118,12 +117,12 @@ I use [Restic](https://restic.net/) as my backup solution. I have a daily cron w
 
 ### Expanding storage
 
-Since this is a volume, I can always resize my volume to a larger size. I need to take my machine offline and then expand the ZFS pool once I have resized the volume. 
+Since this is a volume, I can always resize my volume to a larger size. I need to take my machine offline and then expand the ZFS pool once I have resized the volume.
 
 Another way is to add a new volume and then add that volume to the pool. There is no need to take the machine offline in this case. One thing to note here: the data isn't rebalanced between the volumes automatically, but the new data is written to the new volume until both the volumes are same in size.
 
 ### Conclusion
 
-Nextcloud is a good alternative to all the proprietary clouds. It has a lot of quirks sure but this is being improved constantly. It isn't really not a real alternative to something like Google Photos which not only backs up the photos automatically but magically tags the photos with people & items in the photos (and other crazy ML shit Google does), but for backing up, Nextcloud __is__ a good alternative.
+Nextcloud is a good alternative to all the proprietary clouds. It has a lot of quirks sure but this is being improved constantly. It isn't really a real alternative to something like Google Photos which not only backs up the photos automatically but magically tags the photos with people & items in the photos (and other crazy ML shit Google does), but for backing up, Nextcloud **is** a good alternative.
 
 I plan to explore [Photoprism](https://github.com/photoprism/photoprism) as an alternative to Google Photos for their ML magic.
