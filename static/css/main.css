@@ -34,23 +34,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.header ul {
-    list-style: none inside;
-    margin: 0;
-    padding-top: 10px;
-}
-
-.header li {
-    padding-right: 10px;
-}
-
-.header {
-    line-height: 0.2em;
-    margin-bottom: 20px;
-    /* padding-bottom: 5px; */
-    padding-top: 20px;
-}
-
 .footer {
     text-align: right;
     font-size: 0.75em;
@@ -136,6 +119,20 @@ textarea {
     overflow: auto;
 }
 
+
+/* Code blocks */
+pre code {
+    white-space: pre;
+    display: block;
+}
+  
+@media screen and (max-width: 600px) {
+    pre code {
+      white-space: pre;
+      display: inline;
+    }
+}
+
 img {
     margin: 10px auto 10px auto;
     max-width: 100%;
@@ -171,5 +168,50 @@ pre {
   
     h4 {
       font-size: 1.8rem;
+    }
+}
+
+/* Default styles for both ul and li elements */
+.header ul {
+    list-style: none inside;
+    margin: 0;
+    padding-top: 10px;
+}
+.header li {
+    padding-right: 10px;
+}
+.header {
+    line-height: 0.2em;
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+
+/* Styles for screens smaller than 600px */
+@media (max-width: 600px) {
+    .header ul {
+        padding-top: 5px;
+    }
+    .header li {
+        padding-right: 5px;
+    }
+    .header {
+        line-height: 1.2em;
+        margin-bottom: 10px;
+        padding-top: 10px;
+    }
+}
+
+/* Styles for screens larger than 600px */
+@media (min-width: 601px) {
+    .header ul {
+        padding-top: 10px;
+    }
+    .header li {
+        padding-right: 10px;
+    }
+    .header {
+        line-height: 0.2em;
+        margin-bottom: 20px;
+        padding-top: 20px;
     }
 }
