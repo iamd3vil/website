@@ -1,6 +1,7 @@
 +++
 title = "Fuzzy Search with fzf"
 description = "How I use fzf for fuzzy searching everything"
+author = "Sarat Chandra"
 date = 2023-04-28
 slug = "fuzzy_search_fzf"
 draft = false
