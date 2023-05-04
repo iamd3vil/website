@@ -24,7 +24,7 @@ taxonomies = [ { name = "tags", rss = true } ]
 github = "iamd3vil"
 twitter = "iamd3vil"
 goodreads = "saratchandra92"
-copyright = "Made By Sarat Chandra. Copyright 2021."
+copyright = "Made By Sarat Chandra. Copyright 2023."
 
     [[ extra.links ]]
     title = "Home"
