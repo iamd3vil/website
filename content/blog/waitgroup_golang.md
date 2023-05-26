@@ -39,8 +39,6 @@ func main() {
 }
 ```
 
-By using an anonymous function, we encapsulate the WaitGroup handling without affecting function signatures. This way, we don't force the caller to pass in a waitgroup unnecessarily, and func1 doesn't need to be aware of our goroutine orchestration.
-
-This way, we are not forcing the caller to pass in a waitgroup unnecessarily, and func1 doesn't need to know about our orchestration of goroutines. It achieves the same goal but in a cleaner and more elegant way.
+By using an anonymous function, we encapsulate the WaitGroup handling without affecting function signatures. This way, we don't force the caller to pass in a waitgroup unnecessarily, and func1 doesn't need to be aware of our goroutine orchestration. It achieves the same goal but in a cleaner and more elegant way.
 
 This small post serves as a documentation, so I can easily reference it whenever I come across the earlier mentioned pattern and suggest this improved approach.
