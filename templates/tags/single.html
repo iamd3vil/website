@@ -2,26 +2,28 @@
 
 {% block content %}
 <div class="posts">
-  <h3> {{ term.name | capitalize }} </h3>
+  <h2> {{ term.name | title }} </h2>
   {% for post in term.pages %}
-    <div class="post">
-      <div class="post-header">
+    <article class="post">
+      <header class="post-header">
         <div class="meta">
           <div class="date">
             <span class="day"> {{ post.day }}</span>
-            <span class="rest"> {{ post.month}}/{{ post.year }} </span>
+            <span class="rest"> {{ post.date | date(format='%b') }} {{ post.year }} </span>
           </div>
         </div>
         <div class="matter">
-          <h4 class="title small">
+          <h3 class="title small">
             <a href="{{ post.permalink | safe }}">{{ post.title }}</a>
-          </h4>
-          <span class="description">
+          </h3>
+          {% if post.description %}
+          <div class="description">
             {{ post.description }}
-          </span>
+          </div>
+          {% endif %}
         </div>
-      </div>
-    </div>
+      </header>
+    </article>
   {% endfor %}
 </div>
 {% endblock content %}

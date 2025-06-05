@@ -1,32 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="post">
-  <div class="post-header">
-        <div class="meta">
-          <div class="date">
-            <span class="day"> {{ page.day }}</span>
-            <span class="rest"> {{ page.date | date(format='%b') }} {{ page.year }} </span>
-          </div>
-        </div>
-        <div class="matter">
-          <h2 class="title">
-            {{ page.title }}
-          </h2>
-        </div>
+<article class="post">
+  <header class="post-header">
+    <div class="meta">
+      <div class="date">
+        <span class="day"> {{ page.day }}</span>
+        <span class="rest"> {{ page.date | date(format='%b') }} {{ page.year }} </span>
       </div>
+    </div>
+    <div class="matter">
+      <h1 class="title">
+        {{ page.title }}
+      </h1>
+      {% if page.description %}
+      <div class="description">
+        {{ page.description }}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+  
   <div class="post-content">
-    <p>{{ page.content | safe }}</p>
+    {{ page.content | safe }}
   </div>
-</div>
-{% if page.taxonomies["tags"] %}
+</article>
+
+{% if page.taxonomies.tags %}
 <div class="tags">
-<p>
-  {% for tag in page.taxonomies["tags"] %}
-  {% set url = get_taxonomy_url(kind="tags", name=tag) %}
-  <a href="{{ url }}"> <span class="tag text-success">{{ tag }}</span> </a>
-  {% endfor %}
-</p>
+  <p>
+    {% for tag in page.taxonomies.tags %}
+    {% set url = get_taxonomy_url(kind="tags", name=tag) %}
+    <a href="{{ url }}" class="tag">{{ tag }}</a>
+    {% endfor %}
+  </p>
 </div>
 {% endif %}
 {% endblock content %}
