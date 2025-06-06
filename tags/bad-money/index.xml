@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+ <channel>
+ <title>Sarat Chandra - Bad Money</title>
+ <link>https://sarat.dev</link>
+ <description>Thoughts on Programming, Tech and Life.</description>
+ <generator>Zola</generator>
+ <language>en</language>
+ <atom:link href="https://sarat.dev/tags/bad-money/index.xml" rel="self" type="application/rss+xml"/>
+ <lastBuildDate>Sun, 06 Sep 2020 00:00:00 +0000</lastBuildDate>
+ <item>
+ <title>Bad Money: Inside the NPA Mess</title>
+ <pubDate>Sun, 06 Sep 2020 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/book-reviews/bad-money-review/</link>
+ <guid>https://sarat.dev/book-reviews/bad-money-review/</guid>
+ <description>&lt;blockquote&gt;
+&lt;p&gt;Book: &lt;a href=&quot;https:&#x2F;&#x2F;www.amazon.in&#x2F;Vivek-Kaul-ebook&#x2F;dp&#x2F;B086VWYT4C&#x2F;&quot;&gt;Bad Money: Inside the NPA Mess and How It Threatens the Indian Banking System&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Author: &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;kaul_vivek&quot;&gt;Vivek Kaul&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;In the last 5 years, we have been hearing about the various frauds,  issues happening in the banking sector. I always wanted to learn about  the roots of the issues. I also wanted to learn why the public sector banking in India is  plagued with them. This book is perfect for this.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;Vivek Kaul&lt;&#x2F;code&gt; is the author of this book. He writes about economics in a way, a  layman like me can understand. This holds true for this book as well.  A lot of writers, who writes about economics throw different numbers at you, and then make up a conclusion.  &lt;code&gt;Vivek Kaul&lt;&#x2F;code&gt; does give us lots of numbers in this book but he explains how he arrives at these conclusions. Sometimes, the numbers did overwhelm  me, but the explanations always made sense to me. So, in short, I would  say the book achieved what it wanted to achieve. I understood all the  nuances and the deep rooted issues PSBs or banking  in general has. This book also shows the solutions proposed by various experts and the pros and cons of them.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ </channel>
+</rss>
