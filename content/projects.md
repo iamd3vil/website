@@ -2,7 +2,26 @@
 title = "Projects"
 +++
 
-I am interested in `Go`, `Elixir` and `Python`. These are some of my projects.  
+I am interested in `Rust`, `Go`, `Elixir` and `Python`. These are some of my projects.
+
+#### Hedwig
+
+A fast and efficient SMTP server written in Rust.
+
+URL: [https://github.com/iamd3vil/hedwig](https://github.com/iamd3vil/hedwig)
+
+#### Blobnom
+
+A blob store based on SQLite written in Rust.
+
+URL: [https://github.com/iamd3vil/blobnom](https://github.com/iamd3vil/blobnom)
+
+#### Rlsr
+
+A release manager written in Rust.
+
+URL: [https://github.com/iamd3vil/rlsr](https://github.com/iamd3vil/rlsr)
+Docs: [https://rlsr.sarat.dev](https://rlsr.sarat.dev)
 
 #### Danse
 
