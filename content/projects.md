@@ -1,60 +1,61 @@
 +++
 title = "Projects"
+template = "projects.html"
+
+[[extra.projects]]
+name = "Hedwig"
+description = "A fast and efficient SMTP server."
+url = "https://github.com/iamd3vil/hedwig"
+language = "Rust"
+
+[[extra.projects]]
+name = "Blobnom"
+description = "A blob store based on SQLite."
+url = "https://github.com/iamd3vil/blobnom"
+language = "Rust"
+
+[[extra.projects]]
+name = "Rlsr"
+description = "A release manager."
+url = "https://github.com/iamd3vil/rlsr"
+docs = "https://rlsr.sarat.dev"
+language = "Rust"
+
+[[extra.projects]]
+name = "Danse"
+description = "A DNS over HTTPS proxy (DOH) for enabling any application to use DOH. Encrypts DNS queries to prevent sniffing."
+url = "https://github.com/iamd3vil/danse"
+language = "Go"
+
+[[extra.projects]]
+name = "NatsEx"
+description = "A pure Elixir client for Nats.io messaging system using OTP principles."
+url = "https://github.com/iamd3vil/nats_ex"
+language = "Elixir"
+
+[[extra.projects]]
+name = "Mole"
+description = "A tool to create multiple SSH tunnels using a declarative configuration."
+url = "https://github.com/iamd3vil/mole"
+language = "Go"
+
+[[extra.projects]]
+name = "Twirpex"
+description = "A Twirp RPC implementation in Elixir."
+url = "https://github.com/iamd3vil/twirpex"
+language = "Elixir"
+
+[[extra.projects]]
+name = "Magicportal"
+description = "Forwards UDP multicast data to places where multicast is not supported. Uses Nats.io for transport."
+url = "https://github.com/iamd3vil/magicportal"
+language = "Go"
+
+[[extra.projects]]
+name = "Postman"
+description = "Email service with a simple HTTP API. Supports Mailgun, Sendgrid, or SMTP."
+url = "https://github.com/iamd3vil/postman"
+language = "Go"
 +++
 
 I am interested in `Rust`, `Go`, `Elixir` and `Python`. These are some of my projects.
-
-#### Hedwig
-
-A fast and efficient SMTP server written in Rust.
-
-URL: [https://github.com/iamd3vil/hedwig](https://github.com/iamd3vil/hedwig)
-
-#### Blobnom
-
-A blob store based on SQLite written in Rust.
-
-URL: [https://github.com/iamd3vil/blobnom](https://github.com/iamd3vil/blobnom)
-
-#### Rlsr
-
-A release manager written in Rust.
-
-URL: [https://github.com/iamd3vil/rlsr](https://github.com/iamd3vil/rlsr)
-Docs: [https://rlsr.sarat.dev](https://rlsr.sarat.dev)
-
-#### Danse
-
-A DNS over HTTPS proxy(DOH) for enabling any application to use DOH. Takes in normal DNS queries and sends them to a resolver using DOH. This makes the DNS queries encrypted and hard to sniff and snoop. Written in Go.
-
-URL: [https://github.com/iamd3vil/danse](https://github.com/iamd3vil/danse "https://github.com/iamd3vil/danse")
-
-#### NatsEx
-
-This is a pure Elixir client for Nats.io messaging system. I don't like the official Elixir client of Nats.io since it doesn't use OTP as it should be, I have written this.
-
-URL: [https://github.com/iamd3vil/nats_ex](https://github.com/iamd3vil/nats_ex)
-
-#### Mole
-
-This is a tool to create multiple SSH tunnels using a declarative configuration. Written using Go and used Go's `crypto/ssh` package for creating tunnels.
-
-URL: [https://github.com/iamd3vil/mole](https://github.com/iamd3vil/mole)
-
-#### Twirpex
-
-This is a [Twirp RPC](https://github.com/twitchtv/twirp) implementation in Elixir.
-
-URL: [https://github.com/iamd3vil/twirpex](https://github.com/iamd3vil/twirpex)
-
-#### Magicportal
-
-This project helps forwarding UDP multicast data to places where multicast data is not supported. Applications desgined to work with multicast can work without any modification. Written using [Golang](https://golang.org) and uses [Nats.io](https://nats.io) underneath for transport.
-
-URL: [https://github.com/iamd3vil/magicportal](https://github.com/iamd3vil/magicportal)
-
-#### Postman
-
-This is a service which lets you do send Email with a simple HTTP API. You can use different email providers like Mailgun, Sendgrid or your own SMTP server. You can even interact with a simple HTTP API or use other interfaces like RabbitMQ.
-
-URL: [https://github.com/iamd3vil/postman](https://github.com/iamd3vil/postman)

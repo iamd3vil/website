@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="content">
-  <h2>Tags</h2>
+<div class="prose" style="text-align: center; max-width: 100%;">
+  <h2>Browse by Tags</h2>
 
   {% if terms %}
-  <ul class="tag-cloud">
+  <div class="post-tags" style="justify-content: center; margin-top: 2rem;">
    {% for term in terms %}
-   <li><a href="{{ term.permalink | safe }}">{{ term.name }}<sup>{{ term.pages | length }}</sup></a></li>
+   <a href="{{ term.permalink | safe }}" class="tag-pill" style="font-size: 1rem; padding: 0.5rem 1rem;">
+     {{ term.name }} <span style="opacity: 0.6; font-size: 0.8em; margin-left: 4px;">{{ term.pages | length }}</span>
+   </a>
    {% endfor %}
-  </ul>
+  </div>
   {% endif %}
 </div>
 {% endblock content %}

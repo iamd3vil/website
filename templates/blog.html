@@ -1,27 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="posts">
+<div class="post-grid">
   {% for post in section.pages %}
-    <article class="post">
-      <header class="post-header">
-        <div class="meta">
-          <div class="date">
-            <span class="day"> {{ post.day }}</span>
-            <span class="rest"> {{ post.date | date(format='%b') }} {{ post.year }} </span>
-          </div>
-        </div>
-        <div class="matter">
-          <h2 class="title small">
-            <a href="{{ post.permalink | safe }}">{{ post.title }}</a>
-          </h2>
+    <article class="post-card">
+      <a href="{{ post.permalink | safe }}" class="post-card-link">
+        <div class="post-card-content">
+          <header class="post-card-header">
+            <time class="post-date" datetime="{{ post.date }}">
+              {{ post.date | date(format='%B %d, %Y') }}
+            </time>
+            <h2 class="post-title">{{ post.title }}</h2>
+          </header>
+          
           {% if post.description %}
-          <div class="description">
+          <div class="post-excerpt">
             {{ post.description }}
           </div>
           {% endif %}
+          
+          <div class="post-meta">
+            <span class="read-more">Read article &rarr;</span>
+          </div>
         </div>
-      </header>
+      </a>
     </article>
   {% endfor %}
 </div>
