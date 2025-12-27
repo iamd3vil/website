@@ -3,6 +3,12 @@ title = "Projects"
 template = "projects.html"
 
 [[extra.projects]]
+name = "Verbump"
+description = "A simple utility to bump git tags using semantic versioning."
+url = "https://github.com/iamd3vil/verbump"
+language = "Rust"
+
+[[extra.projects]]
 name = "Hedwig"
 description = "A fast and efficient SMTP server."
 url = "https://github.com/iamd3vil/hedwig"
