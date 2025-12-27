@@ -49,13 +49,7 @@ language = "Elixir"
 name = "Magicportal"
 description = "Forwards UDP multicast data to places where multicast is not supported. Uses Nats.io for transport."
 url = "https://github.com/iamd3vil/magicportal"
-language = "Go"
-
-[[extra.projects]]
-name = "Postman"
-description = "Email service with a simple HTTP API. Supports Mailgun, Sendgrid, or SMTP."
-url = "https://github.com/iamd3vil/postman"
-language = "Go"
+language = "Rust"
 +++
 
 I am interested in `Rust`, `Go`, `Elixir` and `Python`. These are some of my projects.
