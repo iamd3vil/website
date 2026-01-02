@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+ <channel>
+ <title>Sarat Chandra - python</title>
+ <link>https://sarat.dev</link>
+ <description>Thoughts on Programming, Tech and Life.</description>
+ <generator>Zola</generator>
+ <language>en</language>
+ <atom:link href="https://sarat.dev/tags/python/index.xml" rel="self" type="application/rss+xml"/>
+ <lastBuildDate>Tue, 23 Feb 2016 00:00:00 +0000</lastBuildDate>
+ <item>
+ <title>HMAC in Elixir and Python</title>
+ <pubDate>Tue, 23 Feb 2016 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/hmac-in-elixir/</link>
+ <guid>https://sarat.dev/blog/hmac-in-elixir/</guid>
+ <description>&lt;p&gt;Recently I had to implement HMAC SHA1 using Elixir. It&#x27;s pretty simple in Python. Here&#x27;s the code in Python3.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;hashlib
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;hmac
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;secret_key = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;secret-key&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;text = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;This is a secret&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;hmac_sha1 = hmac.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HMAC&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;key&lt;&#x2F;span&gt;&lt;span&gt;=secret_key, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;msg&lt;&#x2F;span&gt;&lt;span&gt;=text, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;digestmod&lt;&#x2F;span&gt;&lt;span&gt;=hashlib.sha1).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hexdigest&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HMAC is &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;format&lt;&#x2F;span&gt;&lt;span&gt;(hmac_sha1)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# HMAC is 08dc7014b3e778a44af52ea7a16a973a9b48f0dd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I wanted to do the same, but couldn&#x27;t find any resource so I went into the Erlang&#x27;s &lt;code&gt;crypto&lt;&#x2F;code&gt; module and it has a &lt;code&gt;hmac&#x2F;3&lt;&#x2F;code&gt; function which does the same. This is how we can use the erlang module to create a HMAC SHA1 in Elixir.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;secret_key = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;secret-key&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;text = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;This is a secret&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;hmac = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:crypto&lt;&#x2F;span&gt;&lt;span&gt;.hmac(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:sha&lt;&#x2F;span&gt;&lt;span&gt;, secret_key, text)
+&lt;&#x2F;span&gt;&lt;span&gt;       |&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Base&lt;&#x2F;span&gt;&lt;span&gt;.encode16
+&lt;&#x2F;span&gt;&lt;span&gt;       |&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt;.downcase
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;IO&lt;&#x2F;span&gt;&lt;span&gt;.puts &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HMAC is #{&lt;&#x2F;span&gt;&lt;span&gt;hmac}&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# HMAC is 08dc7014b3e778a44af52ea7a16a973a9b48f0dd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In the &lt;code&gt;hmac&#x2F;3&lt;&#x2F;code&gt; you can also pass &lt;code&gt;:md5&lt;&#x2F;code&gt;, &lt;code&gt;:sha224&lt;&#x2F;code&gt;, &lt;code&gt;:sha256&lt;&#x2F;code&gt;, &lt;code&gt;:sha384&lt;&#x2F;code&gt;, &lt;code&gt;:sha512&lt;&#x2F;code&gt; for different algorithms. Erlang&#x27;s &lt;code&gt;crypto&lt;&#x2F;code&gt; module is awesome and pretty powerful. This is where, I very much like Elixir and Erlang&#x27;s interoperability.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ </channel>
+</rss>

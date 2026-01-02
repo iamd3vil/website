@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+ <channel>
+ <title>Sarat Chandra</title>
+ <link>https://sarat.dev</link>
+ <description>Thoughts on Programming, Tech and Life.</description>
+ <generator>Zola</generator>
+ <language>en</language>
+ <atom:link href="https://sarat.dev/index.xml" rel="self" type="application/rss+xml"/>
+ <lastBuildDate>Thu, 25 May 2023 00:00:00 +0000</lastBuildDate>
+ <item>
+ <title>Using WaitGroups in Go without Leaky Abstractions</title>
+ <pubDate>Thu, 25 May 2023 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/waitgroup-leaky-abstractions/</link>
+ <guid>https://sarat.dev/blog/waitgroup-leaky-abstractions/</guid>
+ <description>&lt;p&gt;In many Go codebases, I come across patterns like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;go&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-go &quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;func &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg sync&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;WaitGroup
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Add&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;go &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;func1&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Wait&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In this pattern, the goal is to let a function call the &lt;code&gt;Done()&lt;&#x2F;code&gt; method once it is finished, synchronizing multiple goroutines with a &lt;code&gt;sync.WaitGroup&lt;&#x2F;code&gt;. However, there&#x27;s a disadvantage: now the function needs to take a WaitGroup as one of its arguments. Consequently, we force the caller to pass in a waitgroup, which might not always be necessary. This issue is a leaky abstraction provoking unwanted dependencies.&lt;&#x2F;p&gt;
+&lt;p&gt;A better way to achieve the same result without affecting the function signature is:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;go&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-go &quot;&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;func &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg sync&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;WaitGroup
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Add&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;go func&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;defer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Done&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;func1&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Any cleanup code can be run here.
+&lt;&#x2F;span&gt;&lt;span&gt;    }()
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;wg&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Wait&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;By using an anonymous function, we encapsulate the WaitGroup handling without affecting function signatures. This way, we don&#x27;t force the caller to pass in a waitgroup unnecessarily, and func1 doesn&#x27;t need to be aware of our goroutine orchestration. It achieves the same goal but in a cleaner and more elegant way.&lt;&#x2F;p&gt;
+&lt;p&gt;This small post serves as a documentation, so I can easily reference it whenever I come across the earlier mentioned pattern and suggest this improved approach.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ <item>
+ <title>Fuzzy Search with fzf</title>
+ <pubDate>Fri, 28 Apr 2023 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/fuzzy-search-fzf/</link>
+ <guid>https://sarat.dev/blog/fuzzy-search-fzf/</guid>
+ <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;junegunn&#x2F;fzf&quot;&gt;fzf&lt;&#x2F;a&gt; is a powerful tool for fuzzy searching, and can greatly enhance your workflow. Here are some ways that I use &lt;code&gt;fzf&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;1-changing-directories-with-ease&quot;&gt;1. Changing directories with ease&lt;&#x2F;h3&gt;
+&lt;p&gt;To quickly change directories, I use a bash alias that combines the speed of &lt;code&gt;fd&lt;&#x2F;code&gt; (an alternative to &lt;code&gt;find&lt;&#x2F;code&gt;) and the convenience of &lt;code&gt;fzf&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;cdh &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd &lt;&#x2F;span&gt;&lt;span&gt;$(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fd --type&lt;&#x2F;span&gt;&lt;span&gt; d . &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;home&#x2F;sarat&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fzf&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This command lists all directories under the &#x2F;home&#x2F;sarat directory (replace this with your desired directory) and pipes them to fzf, allowing you to select the desired directory with fuzzy search.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, if I need to search for the personal directory under &lt;code&gt;$HOME&#x2F;projects&#x2F;&lt;&#x2F;code&gt;, I just run cdh, search for personal, and hit enter. This command will change the current directory to &lt;code&gt;$HOME&#x2F;projects&#x2F;personal&#x2F;&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;script async id=&quot;asciicast-GT83gj3eMZMngUsyevFH5liLo&quot; src=&quot;https:&#x2F;&#x2F;asciinema.org&#x2F;a&#x2F;GT83gj3eMZMngUsyevFH5liLo.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;h3 id=&quot;2-easily-connecting-to-remote-servers&quot;&gt;2. Easily connecting to remote servers.&lt;&#x2F;h3&gt;
+&lt;p&gt;When you have many servers defined in your &lt;code&gt;.ssh&#x2F;config&lt;&#x2F;code&gt; file, it can be difficult to find the one you need quickly. This is where &lt;code&gt;fzf&lt;&#x2F;code&gt; comes in handy. Here&#x27;s a bash alias I use to search for and SSH into a server:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;sshf &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hosts&lt;&#x2F;span&gt;&lt;span&gt;=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grep &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;^Host &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;~&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;.ssh&#x2F;config &lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;awk &lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{print $2}&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39; | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grep -v &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grep -v &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;*$&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;selected_host&lt;&#x2F;span&gt;&lt;span&gt;=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hosts&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fzf --height&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;50&lt;&#x2F;span&gt;&lt;span&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --reverse --prompt&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;SSH into: &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;[ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-n &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;selected_host&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;then
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ssh &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;selected_host&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fi
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This command gets all of the hosts defined in your .ssh&#x2F;config file, filters out any lines containing &lt;code&gt;*&lt;&#x2F;code&gt;, and pipes them to fzf. fzf then displays a searchable list of hosts, allowing you to easily select the one you want to SSH into. If you select a host, the command then uses ssh to connect to the selected host.&lt;&#x2F;p&gt;
+&lt;script async id=&quot;asciicast-RMnNzfxXibAMtgQGhnBgNoKFu&quot; src=&quot;https:&#x2F;&#x2F;asciinema.org&#x2F;a&#x2F;RMnNzfxXibAMtgQGhnBgNoKFu.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;h3 id=&quot;3-zsh-integration-with-fzf&quot;&gt;3. ZSH Integration with Fzf&lt;&#x2F;h3&gt;
+&lt;p&gt;If you use ZSH as your shell, &lt;code&gt;fzf&lt;&#x2F;code&gt; can be integrated to help you search through your history more easily. I use &lt;code&gt;Oh My ZSH&lt;&#x2F;code&gt; to enhance my ZSH experience, and the &lt;code&gt;fzf&lt;&#x2F;code&gt; plugin makes it simple to search through my command history using fuzzy searching.&lt;&#x2F;p&gt;
+&lt;p&gt;To integrate &lt;code&gt;fzf&lt;&#x2F;code&gt; with ZSH, you can add the following line to your &lt;code&gt;.zshrc&lt;&#x2F;code&gt; file:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;plugins&lt;&#x2F;span&gt;&lt;span&gt;=(... fzf)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;With this plugin enabled, you can search your command history using Ctrl + r. When you press this key combination, your history will be piped into fzf, allowing you to quickly and easily search through your past commands.&lt;&#x2F;p&gt;
+&lt;script async id=&quot;asciicast-6ZKgW7ODpeNS7RrLHAGTam03o&quot; src=&quot;https:&#x2F;&#x2F;asciinema.org&#x2F;a&#x2F;6ZKgW7ODpeNS7RrLHAGTam03o.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;p&gt;Another useful plugin that makes use of &lt;code&gt;fzf&lt;&#x2F;code&gt; is &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Aloxaf&#x2F;fzf-tab&quot;&gt;fzf-tab&lt;&#x2F;a&gt;. This plugin replaces the default tab behavior in your shell and feeds the list of options to &lt;code&gt;fzf&lt;&#x2F;code&gt;, allowing you to fuzzy search and select the option you want.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, if you&#x27;re trying to &lt;code&gt;cd&lt;&#x2F;code&gt; into a directory with a long and complicated name, instead of typing out the entire name or using tab to cycle through options, you can simply start typing the name and &lt;code&gt;fzf-tab&lt;&#x2F;code&gt; will present a list of matching directories. You can then select the directory you want and &lt;code&gt;cd&lt;&#x2F;code&gt; into it.&lt;&#x2F;p&gt;
+&lt;p&gt;Using &lt;code&gt;fzf-tab&lt;&#x2F;code&gt; can save you time and reduce the frustration of tab cycling, making it another great way to use &lt;code&gt;fzf&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;In this post, I&#x27;ve shared some of the workflows I use where &lt;code&gt;fzf&lt;&#x2F;code&gt; has improved my productivity and reduced my frustration. &lt;code&gt;fzf&lt;&#x2F;code&gt; is an incredibly versatile tool that can be used creatively to search and select anything using fuzzy searching.&lt;&#x2F;p&gt;
+&lt;p&gt;What&#x27;s great about &lt;code&gt;fzf&lt;&#x2F;code&gt; is that it is highly customizable. You can add options to preview a file, select multiple items, and more. I&#x27;m always finding new ways to incorporate &lt;code&gt;fzf&lt;&#x2F;code&gt; into my workflows to improve my productivity.&lt;&#x2F;p&gt;
+&lt;p&gt;If you haven&#x27;t tried &lt;code&gt;fzf&lt;&#x2F;code&gt; yet, I highly recommend giving it a try. It&#x27;s a powerful tool that can help streamline your workflow and make your life easier on the command line.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ <item>
+ <title>Photos Management with Nextcloud</title>
+ <pubDate>Mon, 27 Mar 2023 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/photos-nextcloud/</link>
+ <guid>https://sarat.dev/blog/photos-nextcloud/</guid>
+ <description>&lt;p&gt;In my attempt to move away from Google Photos, I decided to try out Photoprism as an alternative in my &lt;a href=&quot;&#x2F;blog&#x2F;hosting-nextcloud&quot;&gt;Nextcloud setup&lt;&#x2F;a&gt;. However, my first impression of Photoprism was that its user interface was unintuitive, and my family members, who are not very tech-savvy, agreed with me.&lt;&#x2F;p&gt;
+&lt;p&gt;Additionally, I discovered that Photoprism lacks a dedicated mobile app, and users are expected to use a Progressive Web App (PWA) instead. This posed a significant problem for us since most of us prefer using our mobile devices to view and share photos, rather than using a web browser.&lt;&#x2F;p&gt;
+&lt;p&gt;While Nextcloud&#x27;s auto-upload feature works seamlessly for us to back up our photos in their original quality, the features available in the Nextcloud Android app for viewing and managing photos are limited.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s when I found the &lt;a href=&quot;https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.nkming.nc_photos.paid&quot;&gt;Photos app for nextcloud&lt;&#x2F;a&gt;. As far as I know, this app is only available for android (no one uses iOS in my family, so this was fine). This app was a gamechanger for us. The app can load photos from nextcloud and I noticed that it was very fast to browse unlike the original nextcloud app.&lt;&#x2F;p&gt;
+&lt;p&gt;The features I liked are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Albums and also support for shared albums, which was a big plus for us.&lt;&#x2F;li&gt;
+&lt;li&gt;Also has a basic support for categorizing and searching using faces, places etc.&lt;&#x2F;li&gt;
+&lt;li&gt;Has a basic photo editor.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;The way I moslty use this with my partner is we have a folder where both of our photos are uploaded automatically by the nextcloud app. Then we point the &lt;a href=&quot;https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.nkming.nc_photos.paid&quot;&gt;Photos app&lt;&#x2F;a&gt; to this folder. So any new photos either of us take, it&#x27;s instantly available for the other person to view. We create albums and with the shared albums support, other family members also can add their photos into the album.&lt;&#x2F;p&gt;
+&lt;p&gt;I do miss the insane magic of google photos sometimes where I can search with random thing I can remember to get a photo, but this app mostly works for us seamlessly and solved a major issue for us.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s when I stumbled upon the &lt;a href=&quot;https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.nkming.nc_photos.paid&quot;&gt;Photos app for nextcloud&lt;&#x2F;a&gt;, which turned out to be a game-changer for my family&#x27;s photo-sharing needs. This app is designed to load photos from Nextcloud and is noticeably faster to browse than the original Nextcloud app.&lt;&#x2F;p&gt;
+&lt;p&gt;The app comes with several features that we found useful:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;It allows us to create albums and supports shared albums, which is especially helpful for our family members who want to contribute photos to a shared album.&lt;&#x2F;li&gt;
+&lt;li&gt;The app also offers basic support for categorizing and searching photos using facial recognition, location data, and more.&lt;&#x2F;li&gt;
+&lt;li&gt;Additionally, it has a basic photo editor that we can use to edit our photos.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;My partner and I use the app by automatically uploading our photos to a designated folder via the Nextcloud app, which we then point to within the Photos app. As a result, any new photos we take are instantly available for the other person to view. We create albums, and with the support for shared albums, other family members can also contribute their photos to the album.&lt;&#x2F;p&gt;
+&lt;p&gt;While I sometimes miss the impressive search capabilities of Google Photos, the &lt;a href=&quot;https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.nkming.nc_photos.paid&quot;&gt;Photos app for nextcloud&lt;&#x2F;a&gt; works seamlessly for our needs and has solved a significant issue for us.&lt;&#x2F;p&gt;
+&lt;p&gt;Overall, I highly recommend paying for the Photos app for Nextcloud. The app has been a significant asset to our family&#x27;s photo-sharing experience, and I give major kudos to the developer for creating such a useful tool.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ <item>
+ <title>My Nextcloud setup</title>
+ <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/hosting-nextcloud/</link>
+ <guid>https://sarat.dev/blog/hosting-nextcloud/</guid>
+ <description>&lt;p&gt;Me and my family uploads most of our photos on Google Photos. This always bothered me since this is one of the most important data we have and we are relying on the promise of unlimited storage by Google. Even then we are losing the original quality photos and uploading lossy photos (what google calls High Quality Photos) to get the unlimited storage. I always wanted to find a good alternative for this. I investigated several alternatives for taking backup of photos from our mobiles. Although there are several cloud services which does this, I didn&#x27;t want to rely on another cloud service and wanted to self host this. I finally settled on &lt;code&gt;Syncthing&lt;&#x2F;code&gt; for myself.&lt;&#x2F;p&gt;
+&lt;p&gt;I run Syncthing on one of my Raspberry Pi 4 and also run it on my mobile. It syncs all my photos from my mobile to the Raspberry Pi which kind of acts like a NAS. This works well for me but I can&#x27;t do this for all my family member who are not tech savvy. So I wanted a simpler solution which can be used by anyone. Enter &lt;a href=&quot;https:&#x2F;&#x2F;nextcloud.com&quot;&gt;Nextcloud&lt;&#x2F;a&gt;. I ran it on my Raspberry Pi NAS and it ran well. I tested it with their mobile app and found that this is pretty good for our use case. I was worried that this isn&#x27;t a reliable setup since it&#x27;s running on a Pi at my home which has a flaky internet setup. I wanted to move this to a more reliable setup but since I was always lazy, I never did.&lt;&#x2F;p&gt;
+&lt;p&gt;Recently google announced that there is &lt;a href=&quot;https:&#x2F;&#x2F;blog.google&#x2F;products&#x2F;photos&#x2F;storage-changes&quot;&gt;no more unlimited storage&lt;&#x2F;a&gt; in Google Photos. This motivated me to setup a more reliable Nextcloud.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;setting-up-nextcloud&quot;&gt;Setting up Nextcloud&lt;&#x2F;h3&gt;
+&lt;p&gt;There are several ways to setup Nextcloud. One setup I thought would be the best way to setup a S3 compatible object storage as the primary storage for Nextcloud on a VPS. So I have setup a Digitalocean droplet with Backblaze B2 but the problem is that the it was rather slow as the primary storage when there are lot of objects in a folder. Also I got some errors while uploading a large number of files.&lt;&#x2F;p&gt;
+&lt;p&gt;I have investigated and found that the probably the most cost effective, reliable and performant way is to get a VPS with a reliable provider and use their Block storage for primary storage. I have settled on Hetzner&#x27;s cloud VPS solution since this is the cheapest and they have a good reputation.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;setting-up-hetzner-vps&quot;&gt;Setting up Hetzner VPS&lt;&#x2F;h4&gt;
+&lt;p&gt;I used Ansible to setup the VPS. Since there is no Cloud Firewall provided by Hetzner, we need to setup our firewall using &lt;code&gt;ufw&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;We need to allow these ports:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;80&lt;&#x2F;code&gt; (http)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;443&lt;&#x2F;code&gt; (https)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;22&lt;&#x2F;code&gt; (ssh)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We are going to use Docker for setting up Nextcloud. One thing to keep in mind is that any forwarded ports will disobey &lt;code&gt;ufw&lt;&#x2F;code&gt; rules. This is a &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;for-linux&#x2F;issues&#x2F;777&quot;&gt;known issue&lt;&#x2F;a&gt; and there seems to be no official resolution close by. So we are only forwarding &lt;code&gt;80&lt;&#x2F;code&gt; &amp;amp; &lt;code&gt;443&lt;&#x2F;code&gt; and since these ports are anyways open, we are okay in this case.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;A Volume of 100 GB is attached to the server while creating the VPS. We are going to use ZFS for this volume for it&#x27;s compression and snapshotting capabilities.&lt;&#x2F;p&gt;
+&lt;p&gt;A pool needs to be created with this volume. Let&#x27;s call this &lt;code&gt;tank&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; zpool create tank &#x2F;dev&#x2F;disk&#x2F;by-id&#x2F;idofthedisk
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Here instead of using something like &lt;code&gt;&#x2F;dev&#x2F;sdb&lt;&#x2F;code&gt; we using the id of the disk so that even if the disk&#x27;s name changes we should be fine. You can find the id of the disk by using &lt;code&gt;ls -lah &#x2F;dev&#x2F;disk&#x2F;by-id&#x2F;&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;We will create a dataset for our Nextcloud.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; zfs create&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; compression=lz4 mountpoint=&#x2F;data&#x2F;nextcloud tank&#x2F;nextcloud
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This should create a dataset called &lt;code&gt;tank&#x2F;nextcloud&lt;&#x2F;code&gt; with &lt;code&gt;lz4&lt;&#x2F;code&gt; compression and then mount it at &lt;code&gt;&#x2F;data&#x2F;nextcloud&lt;&#x2F;code&gt;. This will be where all our Nextcloud data will live.&lt;&#x2F;p&gt;
+&lt;p&gt;For managing the containers, &lt;code&gt;docker-compose&lt;&#x2F;code&gt; can be used. Here is the file I used for running Nextcloud.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: Replace all the variables in &lt;code&gt;{{ }}&lt;&#x2F;code&gt; with the correct values.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;version&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;services&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;nextclouddb&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;postgres
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;data&#x2F;nextcloud&#x2F;db:&#x2F;var&#x2F;lib&#x2F;postgresql&#x2F;data
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;environment&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_DB={{ nextcloud_db_name }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_USER={{ nextcloud_db_user }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_PASSWORD={{ nextcloud_db_password }}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;networks&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;db&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;nextcloud&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;nextcloud:20.0.2
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;data&#x2F;nextcloud&#x2F;nextcloud:&#x2F;var&#x2F;www&#x2F;html
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;environment&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_HOST=nextclouddb
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_DB={{ nextcloud_db_name }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_USER={{ nextcloud_db_user }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POSTGRES_PASSWORD={{ nextcloud_db_password }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;NEXTCLOUD_ADMIN_PASSWORD={{ nextcloud_admin_password }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;NEXTCLOUD_ADMIN_USER={{ nextcloud_admin_user }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;NEXTCLOUD_TRUSTED_DOMAINS={{ nextcloud_domain }}
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;APACHE_DISABLE_REWRITE_IP=1
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;TRUSTED_PROXIES=caddy
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;depends_on&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;nextclouddb&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;networks&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;db&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;nextcloud&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;caddy&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;mrkaran&#x2F;caddy:latest
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;container_name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;caddy
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;restart&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;always
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;volumes&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;data&#x2F;caddy&#x2F;config:&#x2F;config&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;data&#x2F;caddy&#x2F;data:&#x2F;data&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;data&#x2F;caddy&#x2F;Caddyfile:&#x2F;etc&#x2F;caddy&#x2F;Caddyfile&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ports&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;80:80&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;443:443&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;networks&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;nextcloud&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;networks&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;db&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;nextcloud&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Here Caddy is used as the reverse proxy to Nextcloud so that TLS certificates are managed automatically. This should make your nextcloud available at &lt;code&gt;{{ nextcloud_domain }}&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;backing-up&quot;&gt;Backing up&lt;&#x2F;h3&gt;
+&lt;p&gt;I use &lt;a href=&quot;https:&#x2F;&#x2F;restic.net&#x2F;&quot;&gt;Restic&lt;&#x2F;a&gt; as my backup solution. I have a daily cron which takes backup of this to Backblaze B2.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;expanding-storage&quot;&gt;Expanding storage&lt;&#x2F;h3&gt;
+&lt;p&gt;Since this is a volume, I can always resize my volume to a larger size. I need to take my machine offline and then expand the ZFS pool once I have resized the volume.&lt;&#x2F;p&gt;
+&lt;p&gt;Another way is to add a new volume and then add that volume to the pool. There is no need to take the machine offline in this case. One thing to note here: the data isn&#x27;t rebalanced between the volumes automatically, but the new data is written to the new volume until both the volumes are same in size.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h3&gt;
+&lt;p&gt;Nextcloud is a good alternative to all the proprietary clouds. It has a lot of quirks sure but this is being improved constantly. It isn&#x27;t really a real alternative to something like Google Photos which not only backs up the photos automatically but magically tags the photos with people &amp;amp; items in the photos (and other crazy ML shit Google does), but for backing up, Nextcloud &lt;strong&gt;is&lt;&#x2F;strong&gt; a good alternative.&lt;&#x2F;p&gt;
+&lt;p&gt;I plan to explore &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;photoprism&#x2F;photoprism&quot;&gt;Photoprism&lt;&#x2F;a&gt; as an alternative to Google Photos for their ML magic.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ <item>
+ <title>HMAC in Elixir and Python</title>
+ <pubDate>Tue, 23 Feb 2016 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/hmac-in-elixir/</link>
+ <guid>https://sarat.dev/blog/hmac-in-elixir/</guid>
+ <description>&lt;p&gt;Recently I had to implement HMAC SHA1 using Elixir. It&#x27;s pretty simple in Python. Here&#x27;s the code in Python3.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;hashlib
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;hmac
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;secret_key = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;secret-key&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;text = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;This is a secret&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;hmac_sha1 = hmac.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HMAC&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;key&lt;&#x2F;span&gt;&lt;span&gt;=secret_key, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;msg&lt;&#x2F;span&gt;&lt;span&gt;=text, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;digestmod&lt;&#x2F;span&gt;&lt;span&gt;=hashlib.sha1).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hexdigest&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HMAC is &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;format&lt;&#x2F;span&gt;&lt;span&gt;(hmac_sha1)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# HMAC is 08dc7014b3e778a44af52ea7a16a973a9b48f0dd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I wanted to do the same, but couldn&#x27;t find any resource so I went into the Erlang&#x27;s &lt;code&gt;crypto&lt;&#x2F;code&gt; module and it has a &lt;code&gt;hmac&#x2F;3&lt;&#x2F;code&gt; function which does the same. This is how we can use the erlang module to create a HMAC SHA1 in Elixir.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;secret_key = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;secret-key&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;text = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;This is a secret&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;hmac = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:crypto&lt;&#x2F;span&gt;&lt;span&gt;.hmac(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:sha&lt;&#x2F;span&gt;&lt;span&gt;, secret_key, text)
+&lt;&#x2F;span&gt;&lt;span&gt;       |&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Base&lt;&#x2F;span&gt;&lt;span&gt;.encode16
+&lt;&#x2F;span&gt;&lt;span&gt;       |&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt;.downcase
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;IO&lt;&#x2F;span&gt;&lt;span&gt;.puts &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HMAC is #{&lt;&#x2F;span&gt;&lt;span&gt;hmac}&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# HMAC is 08dc7014b3e778a44af52ea7a16a973a9b48f0dd
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In the &lt;code&gt;hmac&#x2F;3&lt;&#x2F;code&gt; you can also pass &lt;code&gt;:md5&lt;&#x2F;code&gt;, &lt;code&gt;:sha224&lt;&#x2F;code&gt;, &lt;code&gt;:sha256&lt;&#x2F;code&gt;, &lt;code&gt;:sha384&lt;&#x2F;code&gt;, &lt;code&gt;:sha512&lt;&#x2F;code&gt; for different algorithms. Erlang&#x27;s &lt;code&gt;crypto&lt;&#x2F;code&gt; module is awesome and pretty powerful. This is where, I very much like Elixir and Erlang&#x27;s interoperability.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ </channel>
+</rss>

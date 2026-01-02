@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Thoughts on Programming, Tech and Life." />
+<meta name="keywords" content="iamd3vil, sarat, sarat chandra" />
+
+<title>Projects | Sarat Chandra</title>
+<meta property="og:title" content="Sarat Chandra | Projects" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://sarat.dev/projects/" />
+<meta property="og:description" content="Thoughts on Programming, Tech and Life." />
+<meta property="og:image" content="" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Projects" />
+<meta name="twitter:description" content="Thoughts on Programming, Tech and Life." />
+<meta property="twitter:image" content="" />
+
+
+    <link rel="alternate" type="application/rss+xml" title="Sarat Chandra"
+    href="https://sarat.dev/index.xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+</head>
+
+<body>
+  <div class="site-wrapper">
+    
+      <header class="site-header">
+        <div class="header-main">
+          <div class="brand">
+            <h1><a href="/">Sarat Chandra</a></h1>
+            <p class="tagline">Thoughts on Programming, Tech and Life.</p>
+          </div>
+          
+          <div class="social-links">
+            <ul>
+              <li>
+                <a href="https://github.com/iamd3vil" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/iamd3vil" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53a4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.goodreads.com/saratchandra92" target="_blank" rel="noopener noreferrer" aria-label="Goodreads">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </a>
+              </li>
+              <li>
+                <a href="https://sarat.dev/index.xml" aria-label="RSS">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+                </a>
+              </li>
+              <li>
+                <button id="theme-toggle" aria-label="Toggle dark mode">
+                  <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                  <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </header>
+    
+    
+    
+      <nav class="site-nav" role="navigation" aria-label="Main navigation">
+        <ul class="nav-list">
+          
+          
+          <li><a  href="https:&#x2F;&#x2F;sarat.dev&#x2F;">Home</a></li>
+          
+          
+          <li><a  href="https:&#x2F;&#x2F;sarat.dev&#x2F;blog&#x2F;">Blog</a></li>
+          
+          
+          <li><a class="active"  href="https:&#x2F;&#x2F;sarat.dev&#x2F;projects&#x2F;">Projects</a></li>
+          
+          
+          <li><a  href="https:&#x2F;&#x2F;sarat.dev&#x2F;tags&#x2F;">Tags</a></li>
+          
+        </ul>
+      </nav>
+    
+    
+    <main class="site-content" role="main">
+      
+<div class="projects-container">
+    <div class="projects-header">
+        <h1 class="page-title">Projects</h1>
+        <div class="page-intro prose">
+            <p>I am interested in <code>Rust</code>, <code>Go</code>, <code>Elixir</code> and <code>Python</code>. These are some of my projects.</p>
+
+        </div>
+    </div>
+
+    <div class="projects-grid">
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;verbump" target="_blank" rel="noopener noreferrer">
+                        Verbump
+                    </a>
+                </h3>
+                <span class="project-language lang-rust">Rust</span>
+            </div>
+            
+            <p class="project-description">A simple utility to bump git tags using semantic versioning.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;verbump" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;hedwig" target="_blank" rel="noopener noreferrer">
+                        Hedwig
+                    </a>
+                </h3>
+                <span class="project-language lang-rust">Rust</span>
+            </div>
+            
+            <p class="project-description">A fast and efficient SMTP server.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;hedwig" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;blobnom" target="_blank" rel="noopener noreferrer">
+                        Blobnom
+                    </a>
+                </h3>
+                <span class="project-language lang-rust">Rust</span>
+            </div>
+            
+            <p class="project-description">A blob store based on SQLite.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;blobnom" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;rlsr" target="_blank" rel="noopener noreferrer">
+                        Rlsr
+                    </a>
+                </h3>
+                <span class="project-language lang-rust">Rust</span>
+            </div>
+            
+            <p class="project-description">A release manager.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;rlsr" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+                <a href="https:&#x2F;&#x2F;rlsr.sarat.dev" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="Documentation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Docs</span>
+                </a>
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;danse" target="_blank" rel="noopener noreferrer">
+                        Danse
+                    </a>
+                </h3>
+                <span class="project-language lang-go">Go</span>
+            </div>
+            
+            <p class="project-description">A DNS over HTTPS proxy (DOH) for enabling any application to use DOH. Encrypts DNS queries to prevent sniffing.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;danse" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;nats_ex" target="_blank" rel="noopener noreferrer">
+                        NatsEx
+                    </a>
+                </h3>
+                <span class="project-language lang-elixir">Elixir</span>
+            </div>
+            
+            <p class="project-description">A pure Elixir client for Nats.io messaging system using OTP principles.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;nats_ex" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;mole" target="_blank" rel="noopener noreferrer">
+                        Mole
+                    </a>
+                </h3>
+                <span class="project-language lang-go">Go</span>
+            </div>
+            
+            <p class="project-description">A tool to create multiple SSH tunnels using a declarative configuration.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;mole" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;twirpex" target="_blank" rel="noopener noreferrer">
+                        Twirpex
+                    </a>
+                </h3>
+                <span class="project-language lang-elixir">Elixir</span>
+            </div>
+            
+            <p class="project-description">A Twirp RPC implementation in Elixir.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;twirpex" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+        <div class="project-card">
+            <div class="project-card-header">
+                <h3 class="project-name">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;magicportal" target="_blank" rel="noopener noreferrer">
+                        Magicportal
+                    </a>
+                </h3>
+                <span class="project-language lang-rust">Rust</span>
+            </div>
+            
+            <p class="project-description">Forwards UDP multicast data to places where multicast is not supported. Uses Nats.io for transport.</p>
+            
+            <div class="project-links">
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;iamd3vil&#x2F;magicportal" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    <span>Source</span>
+                </a>
+                
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+    </main>
+    
+    
+      <footer class="site-footer" role="contentinfo">
+        <div class="footer-content">
+          <p>Made with ❤️ by Sarat Chandra. Copyright 2026.</p>
+        </div>
+      </footer>
+    
+  </div>
+  <script>
+    const toggle = document.getElementById('theme-toggle');
+    const sun = document.getElementById('sun-icon');
+    const moon = document.getElementById('moon-icon');
+    
+    function updateIcon() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      sun.style.display = isDark ? 'block' : 'none';
+      moon.style.display = isDark ? 'none' : 'block';
+    }
+    
+    updateIcon();
+    
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const next = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.theme = next;
+      updateIcon();
+    });
+  </script>
+</body>
+</html>
