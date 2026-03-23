@@ -3,7 +3,7 @@ title = "Using Mullvad VPN with Tailscale"
 description = "Mullvad VPN and Tailscale running together on my mobile"
 date = 2026-03-23
 slug = "mullvad-tailscale"
-draft = true
+draft = false
 
 [taxonomies]
 tags = ["networking"]
