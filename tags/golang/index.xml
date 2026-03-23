@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+ <channel>
+ <title>Sarat Chandra - golang</title>
+ <link>https://sarat.dev</link>
+ <description>Thoughts on Programming, Tech and Life.</description>
+ <generator>Zola</generator>
+ <language>en</language>
+ <atom:link href="https://sarat.dev/tags/golang/index.xml" rel="self" type="application/rss+xml"/>
+ <lastBuildDate>Thu, 25 May 2023 00:00:00 +0000</lastBuildDate>
+ <item>
+ <title>Using WaitGroups in Go without Leaky Abstractions</title>
+ <pubDate>Thu, 25 May 2023 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/waitgroup-leaky-abstractions/</link>
+ <guid>https://sarat.dev/blog/waitgroup-leaky-abstractions/</guid>
+ <description>&lt;p&gt;In many Go codebases, I come across patterns like this:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #F8F8F2; background-color: #282A36;&quot;&gt;&lt;code data-lang=&quot;go&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt; main&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;    var&lt;&#x2F;span&gt;&lt;span&gt; wg&lt;&#x2F;span&gt;&lt;span style=&quot;color: #8BE9FD;font-style: italic;&quot;&gt; sync&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #8BE9FD;font-style: italic;&quot;&gt;WaitGroup&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    wg.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt;Add&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BD93F9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;    go&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt; func1&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;wg)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    wg.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt;Wait&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In this pattern, the goal is to let a function call the &lt;code&gt;Done()&lt;&#x2F;code&gt; method once it is finished, synchronizing multiple goroutines with a &lt;code&gt;sync.WaitGroup&lt;&#x2F;code&gt;. However, there&#x27;s a disadvantage: now the function needs to take a WaitGroup as one of its arguments. Consequently, we force the caller to pass in a waitgroup, which might not always be necessary. This issue is a leaky abstraction provoking unwanted dependencies.&lt;&#x2F;p&gt;
+&lt;p&gt;A better way to achieve the same result without affecting the function signature is:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #F8F8F2; background-color: #282A36;&quot;&gt;&lt;code data-lang=&quot;go&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt; main&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;    var&lt;&#x2F;span&gt;&lt;span&gt; wg&lt;&#x2F;span&gt;&lt;span style=&quot;color: #8BE9FD;font-style: italic;&quot;&gt; sync&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #8BE9FD;font-style: italic;&quot;&gt;WaitGroup&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    wg.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt;Add&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BD93F9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;    go func&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF79C6;&quot;&gt;        defer&lt;&#x2F;span&gt;&lt;span&gt; wg.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt;Done&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt;        func1&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6272A4;&quot;&gt;        &#x2F;&#x2F; Any cleanup code can be run here.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    wg.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #50FA7B;&quot;&gt;Wait&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;By using an anonymous function, we encapsulate the WaitGroup handling without affecting function signatures. This way, we don&#x27;t force the caller to pass in a waitgroup unnecessarily, and func1 doesn&#x27;t need to be aware of our goroutine orchestration. It achieves the same goal but in a cleaner and more elegant way.&lt;&#x2F;p&gt;
+&lt;p&gt;This small post serves as a documentation, so I can easily reference it whenever I come across the earlier mentioned pattern and suggest this improved approach.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+ <channel>
+ <title>Sarat Chandra - networking</title>
+ <link>https://sarat.dev</link>
+ <description>Thoughts on Programming, Tech and Life.</description>
+ <generator>Zola</generator>
+ <language>en</language>
+ <atom:link href="https://sarat.dev/tags/networking/index.xml" rel="self" type="application/rss+xml"/>
+ <lastBuildDate>Mon, 23 Mar 2026 00:00:00 +0000</lastBuildDate>
+ <item>
+ <title>Using Mullvad VPN with Tailscale</title>
+ <pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate>
+ <link>https://sarat.dev/blog/mullvad-tailscale/</link>
+ <guid>https://sarat.dev/blog/mullvad-tailscale/</guid>
+ <description>&lt;p&gt;I wanted to use &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;mullvad.net&#x2F;&quot;&gt;Mullvad VPN&lt;&#x2F;a&gt; and &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;tailscale.com&#x2F;&quot;&gt;Tailscale&lt;&#x2F;a&gt; together on my Android phone. The problem is Android only allows one active VPN at a time. Tailscale does have a built-in option to purchase Mullvad through them, but that&#x27;s not available in India.&lt;&#x2F;p&gt;
+&lt;p&gt;So I built a small tool to work around this: &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;git.simhadri.rocks&#x2F;iamd3vil&#x2F;mullvad-tailscale&quot;&gt;mullvad-tailscale&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s a Docker container that takes a Mullvad WireGuard tunnel and exposes it as a Tailscale exit node. Once it&#x27;s running, it shows up as a node in your tailnet with exit node enabled. Any device on your tailnet can then route traffic through it and out via Mullvad.&lt;&#x2F;p&gt;
+&lt;p&gt;It also comes with a small web UI called mullvad-switcher that lets you change the Mullvad server location on the fly.&lt;&#x2F;p&gt;
+&lt;p&gt;Check out the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;git.simhadri.rocks&#x2F;iamd3vil&#x2F;mullvad-tailscale&quot;&gt;repo&lt;&#x2F;a&gt; for setup details.&lt;&#x2F;p&gt;
+</description>
+ </item>
+ </channel>
+</rss>
