@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark"><title>My Nextcloud setup · Sarat Chandra</title>
+  <meta name="description" content="Hosting Nextcloud for my family as an alternative to proprietary cloud.">
+  <meta property="og:title" content="My Nextcloud setup">
+  <meta property="og:description" content="Hosting Nextcloud for my family as an alternative to proprietary cloud.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Sarat Chandra">
+  <meta property="og:url" content="https://sarat.dev/blog/hosting-nextcloud/">
+  <link rel="canonical" href="https://sarat.dev/blog/hosting-nextcloud/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@iamd3vil">
+
+  <link rel="alternate" type="application/rss+xml" title="Sarat Chandra" href="https://sarat.dev/index.xml">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">Sarat Chandra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="https://sarat.dev/blog/" class="active">Blog</a>
+        <a href="https://sarat.dev/projects/">Projects</a>
+        <a href="https://sarat.dev/tags/">Tags</a>
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      
+<article class="post">
+  <header class="post-head">
+    <h1>My Nextcloud setup</h1>
+    <p class="post-meta">
+      <time datetime="2020-12-04">December 04, 2020</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>4 min read</span>
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="tag" href="https://sarat.dev/tags/self-hosting/">Self Hosting</a>
+    </p>
+  </header>
+
+  <div class="prose">
+    <p>Me and my family uploads most of our photos on Google Photos. This always bothered me since this is one of the most important data we have and we are relying on the promise of unlimited storage by Google. Even then we are losing the original quality photos and uploading lossy photos (what google calls High Quality Photos) to get the unlimited storage. I always wanted to find a good alternative for this. I investigated several alternatives for taking backup of photos from our mobiles. Although there are several cloud services which does this, I didn't want to rely on another cloud service and wanted to self host this. I finally settled on <code>Syncthing</code> for myself.</p>
+<p>I run Syncthing on one of my Raspberry Pi 4 and also run it on my mobile. It syncs all my photos from my mobile to the Raspberry Pi which kind of acts like a NAS. This works well for me but I can't do this for all my family member who are not tech savvy. So I wanted a simpler solution which can be used by anyone. Enter <a rel="external" href="https://nextcloud.com">Nextcloud</a>. I ran it on my Raspberry Pi NAS and it ran well. I tested it with their mobile app and found that this is pretty good for our use case. I was worried that this isn't a reliable setup since it's running on a Pi at my home which has a flaky internet setup. I wanted to move this to a more reliable setup but since I was always lazy, I never did.</p>
+<p>Recently google announced that there is <a rel="external" href="https://blog.google/products/photos/storage-changes">no more unlimited storage</a> in Google Photos. This motivated me to setup a more reliable Nextcloud.</p>
+<h3 id="setting-up-nextcloud">Setting up Nextcloud</h3>
+<p>There are several ways to setup Nextcloud. One setup I thought would be the best way to setup a S3 compatible object storage as the primary storage for Nextcloud on a VPS. So I have setup a Digitalocean droplet with Backblaze B2 but the problem is that the it was rather slow as the primary storage when there are lot of objects in a folder. Also I got some errors while uploading a large number of files.</p>
+<p>I have investigated and found that the probably the most cost effective, reliable and performant way is to get a VPS with a reliable provider and use their Block storage for primary storage. I have settled on Hetzner's cloud VPS solution since this is the cheapest and they have a good reputation.</p>
+<h4 id="setting-up-hetzner-vps">Setting up Hetzner VPS</h4>
+<p>I used Ansible to setup the VPS. Since there is no Cloud Firewall provided by Hetzner, we need to setup our firewall using <code>ufw</code>.</p>
+<p>We need to allow these ports:</p>
+<ul>
+<li><code>80</code> (http)</li>
+<li><code>443</code> (https)</li>
+<li><code>22</code> (ssh)</li>
+</ul>
+<blockquote>
+<p>We are going to use Docker for setting up Nextcloud. One thing to keep in mind is that any forwarded ports will disobey <code>ufw</code> rules. This is a <a rel="external" href="https://github.com/docker/for-linux/issues/777">known issue</a> and there seems to be no official resolution close by. So we are only forwarding <code>80</code> &amp; <code>443</code> and since these ports are anyways open, we are okay in this case.</p>
+</blockquote>
+<p>A Volume of 100 GB is attached to the server while creating the VPS. We are going to use ZFS for this volume for it's compression and snapshotting capabilities.</p>
+<p>A pool needs to be created with this volume. Let's call this <code>tank</code>.</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> zpool create tank /dev/disk/by-id/idofthedisk</span></span></code></pre>
+<p>Here instead of using something like <code>/dev/sdb</code> we using the id of the disk so that even if the disk's name changes we should be fine. You can find the id of the disk by using <code>ls -lah /dev/disk/by-id/</code>.</p>
+<p>We will create a dataset for our Nextcloud.</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> zfs create</span><span style="color: #BD93F9;"> -o</span><span style="color: #F1FA8C;"> compression=lz4 mountpoint=/data/nextcloud tank/nextcloud</span></span></code></pre>
+<p>This should create a dataset called <code>tank/nextcloud</code> with <code>lz4</code> compression and then mount it at <code>/data/nextcloud</code>. This will be where all our Nextcloud data will live.</p>
+<p>For managing the containers, <code>docker-compose</code> can be used. Here is the file I used for running Nextcloud.</p>
+<blockquote>
+<p>Note: Replace all the variables in <code>{{ }}</code> with the correct values.</p>
+</blockquote>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="yaml"><span class="giallo-l"><span style="color: #8BE9FD;">version</span><span style="color: #FF79C6;">:</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">3</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">services</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">  nextclouddb</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    image</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> postgres</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    restart</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> always</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    volumes</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> /data/nextcloud/db:/var/lib/postgresql/data</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    environment</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_DB={{ nextcloud_db_name }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_USER={{ nextcloud_db_user }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_PASSWORD={{ nextcloud_db_password }}</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    networks</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">db</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">  nextcloud</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    image</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> nextcloud:20.0.2</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    restart</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> always</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    volumes</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> /data/nextcloud/nextcloud:/var/www/html</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    environment</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_HOST=nextclouddb</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_DB={{ nextcloud_db_name }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_USER={{ nextcloud_db_user }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> POSTGRES_PASSWORD={{ nextcloud_db_password }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> NEXTCLOUD_ADMIN_PASSWORD={{ nextcloud_admin_password }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> NEXTCLOUD_ADMIN_USER={{ nextcloud_admin_user }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> NEXTCLOUD_TRUSTED_DOMAINS={{ nextcloud_domain }}</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> APACHE_DISABLE_REWRITE_IP=1</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #F1FA8C;"> TRUSTED_PROXIES=caddy</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    depends_on</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">nextclouddb</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    networks</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">db</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">nextcloud</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">  caddy</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    image</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> mrkaran/caddy:latest</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    container_name</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> caddy</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    restart</span><span style="color: #FF79C6;">:</span><span style="color: #F1FA8C;"> always</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    volumes</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">/data/caddy/config:/config</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">/data/caddy/data:/data</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">/data/caddy/Caddyfile:/etc/caddy/Caddyfile</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    ports</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">80:80</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">443:443</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">    networks</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">      -</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">nextcloud</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">networks</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">  db</span><span style="color: #FF79C6;">:</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">  nextcloud</span><span style="color: #FF79C6;">:</span></span></code></pre>
+<p>Here Caddy is used as the reverse proxy to Nextcloud so that TLS certificates are managed automatically. This should make your nextcloud available at <code>{{ nextcloud_domain }}</code>.</p>
+<h3 id="backing-up">Backing up</h3>
+<p>I use <a rel="external" href="https://restic.net/">Restic</a> as my backup solution. I have a daily cron which takes backup of this to Backblaze B2.</p>
+<h3 id="expanding-storage">Expanding storage</h3>
+<p>Since this is a volume, I can always resize my volume to a larger size. I need to take my machine offline and then expand the ZFS pool once I have resized the volume.</p>
+<p>Another way is to add a new volume and then add that volume to the pool. There is no need to take the machine offline in this case. One thing to note here: the data isn't rebalanced between the volumes automatically, but the new data is written to the new volume until both the volumes are same in size.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>Nextcloud is a good alternative to all the proprietary clouds. It has a lot of quirks sure but this is being improved constantly. It isn't really a real alternative to something like Google Photos which not only backs up the photos automatically but magically tags the photos with people &amp; items in the photos (and other crazy ML shit Google does), but for backing up, Nextcloud <strong>is</strong> a good alternative.</p>
+<p>I plan to explore <a rel="external" href="https://github.com/photoprism/photoprism">Photoprism</a> as an alternative to Google Photos for their ML magic.</p>
+
+  </div>
+
+  <footer class="post-foot">
+    <a href="https://sarat.dev/blog/_index.md"><span aria-hidden="true">←</span> All posts</a>
+  </footer>
+</article>
+
+    </main>
+
+    <footer class="site-foot">
+      <p>© 2026 Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+        <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

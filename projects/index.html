@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark"><title>Projects · Sarat Chandra</title>
+  <meta name="description" content="Thoughts on Programming, Tech and Life.">
+  <meta property="og:title" content="Projects">
+  <meta property="og:description" content="Thoughts on Programming, Tech and Life.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Sarat Chandra">
+  <meta property="og:url" content="https://sarat.dev/projects/">
+  <link rel="canonical" href="https://sarat.dev/projects/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@iamd3vil">
+
+  <link rel="alternate" type="application/rss+xml" title="Sarat Chandra" href="https://sarat.dev/index.xml">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">Sarat Chandra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="https://sarat.dev/blog/">Blog</a>
+        <a href="https://sarat.dev/projects/" class="active">Projects</a>
+        <a href="https://sarat.dev/tags/">Tags</a>
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      
+<header class="page-head">
+  <h1>Projects</h1>
+  <div class="prose">
+    <p>I am interested in <code>Rust</code>, <code>Go</code>, <code>Elixir</code> and <code>Python</code>. These are some of my projects.</p>
+
+  </div>
+</header>
+
+<ul class="projects">
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/verbump" rel="noopener">Verbump<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A simple utility to bump git tags using semantic versioning.</p>
+    <div class="project-meta">
+      <span class="lang lang-rust">Rust</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/hedwig" rel="noopener">Hedwig<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A fast and efficient SMTP server.</p>
+    <div class="project-meta">
+      <span class="lang lang-rust">Rust</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/blobnom" rel="noopener">Blobnom<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A blob store based on SQLite.</p>
+    <div class="project-meta">
+      <span class="lang lang-rust">Rust</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/rlsr" rel="noopener">Rlsr<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A release manager.</p>
+    <div class="project-meta">
+      <span class="lang lang-rust">Rust</span>
+      <a href="https://rlsr.sarat.dev" rel="noopener">Docs</a>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/danse" rel="noopener">Danse<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A DNS over HTTPS proxy (DOH) for enabling any application to use DOH. Encrypts DNS queries to prevent sniffing.</p>
+    <div class="project-meta">
+      <span class="lang lang-go">Go</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/nats_ex" rel="noopener">NatsEx<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A pure Elixir client for Nats.io messaging system using OTP principles.</p>
+    <div class="project-meta">
+      <span class="lang lang-elixir">Elixir</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/mole" rel="noopener">Mole<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A tool to create multiple SSH tunnels using a declarative configuration.</p>
+    <div class="project-meta">
+      <span class="lang lang-go">Go</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/twirpex" rel="noopener">Twirpex<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>A Twirp RPC implementation in Elixir.</p>
+    <div class="project-meta">
+      <span class="lang lang-elixir">Elixir</span>
+    </div>
+  </li>
+  <li class="project">
+    <h2><a href="https://github.com/iamd3vil/magicportal" rel="noopener">Magicportal<span class="ext" aria-hidden="true">↗</span></a></h2>
+    <p>Forwards UDP multicast data to places where multicast is not supported. Uses Nats.io for transport.</p>
+    <div class="project-meta">
+      <span class="lang lang-rust">Rust</span>
+    </div>
+  </li>
+</ul>
+
+    </main>
+
+    <footer class="site-foot">
+      <p>© 2026 Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+        <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

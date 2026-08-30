@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark"><title>Using WaitGroups in Go without Leaky Abstractions · Sarat Chandra</title>
+  <meta name="description" content="Thoughts on Programming, Tech and Life.">
+  <meta property="og:title" content="Using WaitGroups in Go without Leaky Abstractions">
+  <meta property="og:description" content="Thoughts on Programming, Tech and Life.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Sarat Chandra">
+  <meta property="og:url" content="https://sarat.dev/blog/waitgroup-leaky-abstractions/">
+  <link rel="canonical" href="https://sarat.dev/blog/waitgroup-leaky-abstractions/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@iamd3vil">
+
+  <link rel="alternate" type="application/rss+xml" title="Sarat Chandra" href="https://sarat.dev/index.xml">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">Sarat Chandra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="https://sarat.dev/blog/" class="active">Blog</a>
+        <a href="https://sarat.dev/projects/">Projects</a>
+        <a href="https://sarat.dev/tags/">Tags</a>
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      
+<article class="post">
+  <header class="post-head">
+    <h1>Using WaitGroups in Go without Leaky Abstractions</h1>
+    <p class="post-meta">
+      <time datetime="2023-05-25">May 25, 2023</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>1 min read</span>
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="tag" href="https://sarat.dev/tags/go/">go</a>
+      <a class="tag" href="https://sarat.dev/tags/golang/">golang</a>
+      <a class="tag" href="https://sarat.dev/tags/style/">style</a>
+    </p>
+  </header>
+
+  <div class="prose">
+    <p>In many Go codebases, I come across patterns like this:</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="go"><span class="giallo-l"><span style="color: #FF79C6;">func</span><span style="color: #50FA7B;"> main</span><span>() {</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    var</span><span> wg</span><span style="color: #8BE9FD;font-style: italic;"> sync</span><span>.</span><span style="color: #8BE9FD;font-style: italic;">WaitGroup</span></span>
+<span class="giallo-l"><span>    wg.</span><span style="color: #50FA7B;">Add</span><span>(</span><span style="color: #BD93F9;">1</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    go</span><span style="color: #50FA7B;"> func1</span><span>(</span><span style="color: #FF79C6;">&amp;</span><span>wg)</span></span>
+<span class="giallo-l"><span>    wg.</span><span style="color: #50FA7B;">Wait</span><span>()</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>In this pattern, the goal is to let a function call the <code>Done()</code> method once it is finished, synchronizing multiple goroutines with a <code>sync.WaitGroup</code>. However, there's a disadvantage: now the function needs to take a WaitGroup as one of its arguments. Consequently, we force the caller to pass in a waitgroup, which might not always be necessary. This issue is a leaky abstraction provoking unwanted dependencies.</p>
+<p>A better way to achieve the same result without affecting the function signature is:</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="go"><span class="giallo-l"><span style="color: #FF79C6;">func</span><span style="color: #50FA7B;"> main</span><span>() {</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    var</span><span> wg</span><span style="color: #8BE9FD;font-style: italic;"> sync</span><span>.</span><span style="color: #8BE9FD;font-style: italic;">WaitGroup</span></span>
+<span class="giallo-l"><span>    wg.</span><span style="color: #50FA7B;">Add</span><span>(</span><span style="color: #BD93F9;">1</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    go func</span><span>() {</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">        defer</span><span> wg.</span><span style="color: #50FA7B;">Done</span><span>()</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">        func1</span><span>()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;">        // Any cleanup code can be run here.</span></span>
+<span class="giallo-l"><span>    }()</span></span>
+<span class="giallo-l"><span>    wg.</span><span style="color: #50FA7B;">Wait</span><span>()</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>By using an anonymous function, we encapsulate the WaitGroup handling without affecting function signatures. This way, we don't force the caller to pass in a waitgroup unnecessarily, and func1 doesn't need to be aware of our goroutine orchestration. It achieves the same goal but in a cleaner and more elegant way.</p>
+<p>This small post serves as a documentation, so I can easily reference it whenever I come across the earlier mentioned pattern and suggest this improved approach.</p>
+
+  </div>
+
+  <footer class="post-foot">
+    <a href="https://sarat.dev/blog/_index.md"><span aria-hidden="true">←</span> All posts</a>
+  </footer>
+</article>
+
+    </main>
+
+    <footer class="site-foot">
+      <p>© 2026 Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+        <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

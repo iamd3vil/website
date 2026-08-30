@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark"><title>HMAC in Elixir and Python · Sarat Chandra</title>
+  <meta name="description" content="HMAC in Elixir and Python">
+  <meta property="og:title" content="HMAC in Elixir and Python">
+  <meta property="og:description" content="HMAC in Elixir and Python">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Sarat Chandra">
+  <meta property="og:url" content="https://sarat.dev/blog/hmac-in-elixir/">
+  <link rel="canonical" href="https://sarat.dev/blog/hmac-in-elixir/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@iamd3vil">
+
+  <link rel="alternate" type="application/rss+xml" title="Sarat Chandra" href="https://sarat.dev/index.xml">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">Sarat Chandra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="https://sarat.dev/blog/" class="active">Blog</a>
+        <a href="https://sarat.dev/projects/">Projects</a>
+        <a href="https://sarat.dev/tags/">Tags</a>
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      
+<article class="post">
+  <header class="post-head">
+    <h1>HMAC in Elixir and Python</h1>
+    <p class="post-meta">
+      <time datetime="2016-02-23">February 23, 2016</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>1 min read</span>
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="tag" href="https://sarat.dev/tags/elixir/">elixir</a>
+      <a class="tag" href="https://sarat.dev/tags/erlang/">erlang</a>
+      <a class="tag" href="https://sarat.dev/tags/hmac/">hmac</a>
+      <a class="tag" href="https://sarat.dev/tags/crypto/">crypto</a>
+      <a class="tag" href="https://sarat.dev/tags/python/">python</a>
+    </p>
+  </header>
+
+  <div class="prose">
+    <p>Recently I had to implement HMAC SHA1 using Elixir. It's pretty simple in Python. Here's the code in Python3.</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="python"><span class="giallo-l"><span style="color: #FF79C6;">import</span><span> hashlib</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">import</span><span> hmac</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>secret_key</span><span style="color: #FF79C6;"> = b</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">secret-key</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span>text</span><span style="color: #FF79C6;"> = b</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">This is a secret</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>hmac_sha1</span><span style="color: #FF79C6;"> =</span><span> hmac.HMAC(</span><span style="color: #FFB86C;font-style: italic;">key</span><span style="color: #FF79C6;">=</span><span>secret_key,</span><span style="color: #FFB86C;font-style: italic;"> msg</span><span style="color: #FF79C6;">=</span><span>text,</span><span style="color: #FFB86C;font-style: italic;"> digestmod</span><span style="color: #FF79C6;">=</span><span>hashlib.sha1).hexdigest()</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">print</span><span>(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">HMAC is </span><span style="color: #BD93F9;">{}</span><span style="color: #E9F284;">&quot;</span><span>.format(hmac_sha1))</span><span style="color: #6272A4;"> # HMAC is 08dc7014b3e778a44af52ea7a16a973a9b48f0dd</span></span></code></pre>
+<p>I wanted to do the same, but couldn't find any resource so I went into the Erlang's <code>crypto</code> module and it has a <code>hmac/3</code> function which does the same. This is how we can use the erlang module to create a HMAC SHA1 in Elixir.</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="elixir"><span class="giallo-l"><span>secret_key </span><span style="color: #FF79C6;">=</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">secret-key</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span>text </span><span style="color: #FF79C6;">=</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">This is a secret</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>hmac </span><span style="color: #FF79C6;">=</span><span style="color: #BD93F9;"> :crypto</span><span>.</span><span style="color: #50FA7B;">hmac</span><span>(</span><span style="color: #BD93F9;">:sha</span><span>, secret_key, text)</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">       |&gt;</span><span style="color: #8BE9FD;"> Base</span><span>.</span><span style="color: #50FA7B;">encode16</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">       |&gt;</span><span style="color: #8BE9FD;"> String</span><span>.</span><span style="color: #50FA7B;">downcase</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">IO</span><span>.</span><span style="color: #50FA7B;">puts</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">HMAC is </span><span style="color: #FF79C6;">#{</span><span style="color: #F1FA8C;">hmac</span><span style="color: #FF79C6;">}</span><span style="color: #E9F284;">&quot;</span><span style="color: #6272A4;"> # HMAC is 08dc7014b3e778a44af52ea7a16a973a9b48f0dd</span></span></code></pre>
+<p>In the <code>hmac/3</code> you can also pass <code>:md5</code>, <code>:sha224</code>, <code>:sha256</code>, <code>:sha384</code>, <code>:sha512</code> for different algorithms. Erlang's <code>crypto</code> module is awesome and pretty powerful. This is where, I very much like Elixir and Erlang's interoperability.</p>
+
+  </div>
+
+  <footer class="post-foot">
+    <a href="https://sarat.dev/blog/_index.md"><span aria-hidden="true">←</span> All posts</a>
+  </footer>
+</article>
+
+    </main>
+
+    <footer class="site-foot">
+      <p>© 2026 Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+        <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

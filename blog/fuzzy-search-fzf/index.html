@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark"><title>Fuzzy Search with fzf · Sarat Chandra</title>
+  <meta name="description" content="How I use fzf for fuzzy searching everything">
+  <meta property="og:title" content="Fuzzy Search with fzf">
+  <meta property="og:description" content="How I use fzf for fuzzy searching everything">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Sarat Chandra">
+  <meta property="og:url" content="https://sarat.dev/blog/fuzzy-search-fzf/">
+  <link rel="canonical" href="https://sarat.dev/blog/fuzzy-search-fzf/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@iamd3vil">
+
+  <link rel="alternate" type="application/rss+xml" title="Sarat Chandra" href="https://sarat.dev/index.xml">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">Sarat Chandra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="https://sarat.dev/blog/" class="active">Blog</a>
+        <a href="https://sarat.dev/projects/">Projects</a>
+        <a href="https://sarat.dev/tags/">Tags</a>
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      
+<article class="post">
+  <header class="post-head">
+    <h1>Fuzzy Search with fzf</h1>
+    <p class="post-meta">
+      <time datetime="2023-04-28">April 28, 2023</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>3 min read</span>
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="tag" href="https://sarat.dev/tags/workflows/">Workflows</a>
+    </p>
+  </header>
+
+  <div class="prose">
+    <p><a rel="external" href="https://github.com/junegunn/fzf">fzf</a> is a powerful tool for fuzzy searching, and can greatly enhance your workflow. Here are some ways that I use <code>fzf</code>:</p>
+<h3 id="1-changing-directories-with-ease">1. Changing directories with ease</h3>
+<p>To quickly change directories, I use a bash alias that combines the speed of <code>fd</code> (an alternative to <code>find</code>) and the convenience of <code>fzf</code>.</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">cdh</span><span> () {</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">        cd</span><span> $(</span><span style="color: #50FA7B;">fd</span><span style="color: #BD93F9;"> --type</span><span style="color: #F1FA8C;"> d .</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">/home/sarat</span><span style="color: #E9F284;">&quot;</span><span style="color: #FF79C6;"> |</span><span style="color: #50FA7B;"> fzf</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>This command lists all directories under the /home/sarat directory (replace this with your desired directory) and pipes them to fzf, allowing you to select the desired directory with fuzzy search.</p>
+<p>For example, if I need to search for the personal directory under <code>$HOME/projects/</code>, I just run cdh, search for personal, and hit enter. This command will change the current directory to <code>$HOME/projects/personal/</code>.</p>
+<script async id="asciicast-GT83gj3eMZMngUsyevFH5liLo" src="https://asciinema.org/a/GT83gj3eMZMngUsyevFH5liLo.js"></script>
+<h3 id="2-easily-connecting-to-remote-servers">2. Easily connecting to remote servers.</h3>
+<p>When you have many servers defined in your <code>.ssh/config</code> file, it can be difficult to find the one you need quickly. This is where <code>fzf</code> comes in handy. Here's a bash alias I use to search for and SSH into a server:</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">sshf</span><span> () {</span></span>
+<span class="giallo-l"><span style="color: #BD93F9;">        hosts</span><span style="color: #FF79C6;">=</span><span>$(</span><span style="color: #50FA7B;">grep</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">^Host </span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;"> ~/.ssh/config</span><span style="color: #FF79C6;"> |</span><span style="color: #50FA7B;"> awk</span><span style="color: #E9F284;"> &#39;</span><span style="color: #F1FA8C;">{print $2}</span><span style="color: #E9F284;">&#39;</span><span style="color: #FF79C6;"> |</span><span style="color: #50FA7B;"> grep</span><span style="color: #BD93F9;"> -v</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">*</span><span style="color: #E9F284;">&quot;</span><span style="color: #FF79C6;"> |</span><span style="color: #50FA7B;"> grep</span><span style="color: #BD93F9;"> -v</span><span style="color: #E9F284;"> &quot;</span><span style="color: #F1FA8C;">*$</span><span style="color: #E9F284;">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #BD93F9;">        selected_host</span><span style="color: #FF79C6;">=</span><span>$(</span><span style="color: #8BE9FD;">echo</span><span style="color: #E9F284;"> &quot;</span><span style="color: #BD93F9;">$hosts</span><span style="color: #E9F284;">&quot;</span><span style="color: #FF79C6;"> |</span><span style="color: #50FA7B;"> fzf</span><span style="color: #BD93F9;"> --height=50% --reverse --prompt=</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">SSH into: </span><span style="color: #E9F284;">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">        if</span><span> [</span><span style="color: #FF79C6;"> -n</span><span style="color: #E9F284;"> &quot;</span><span style="color: #BD93F9;">$selected_host</span><span style="color: #E9F284;">&quot;</span><span> ]</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">        then</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">                ssh</span><span style="color: #E9F284;"> &quot;</span><span style="color: #BD93F9;">$selected_host</span><span style="color: #E9F284;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">        fi</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>This command gets all of the hosts defined in your .ssh/config file, filters out any lines containing <code>*</code>, and pipes them to fzf. fzf then displays a searchable list of hosts, allowing you to easily select the one you want to SSH into. If you select a host, the command then uses ssh to connect to the selected host.</p>
+<script async id="asciicast-RMnNzfxXibAMtgQGhnBgNoKFu" src="https://asciinema.org/a/RMnNzfxXibAMtgQGhnBgNoKFu.js"></script>
+<h3 id="3-zsh-integration-with-fzf">3. ZSH Integration with Fzf</h3>
+<p>If you use ZSH as your shell, <code>fzf</code> can be integrated to help you search through your history more easily. I use <code>Oh My ZSH</code> to enhance my ZSH experience, and the <code>fzf</code> plugin makes it simple to search through my command history using fuzzy searching.</p>
+<p>To integrate <code>fzf</code> with ZSH, you can add the following line to your <code>.zshrc</code> file:</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: #BD93F9;">plugins</span><span style="color: #FF79C6;">=</span><span>(</span><span style="color: #F1FA8C;">... fzf</span><span>)</span></span></code></pre>
+<p>With this plugin enabled, you can search your command history using Ctrl + r. When you press this key combination, your history will be piped into fzf, allowing you to quickly and easily search through your past commands.</p>
+<script async id="asciicast-6ZKgW7ODpeNS7RrLHAGTam03o" src="https://asciinema.org/a/6ZKgW7ODpeNS7RrLHAGTam03o.js"></script>
+<p>Another useful plugin that makes use of <code>fzf</code> is <a rel="external" href="https://github.com/Aloxaf/fzf-tab">fzf-tab</a>. This plugin replaces the default tab behavior in your shell and feeds the list of options to <code>fzf</code>, allowing you to fuzzy search and select the option you want.</p>
+<p>For example, if you're trying to <code>cd</code> into a directory with a long and complicated name, instead of typing out the entire name or using tab to cycle through options, you can simply start typing the name and <code>fzf-tab</code> will present a list of matching directories. You can then select the directory you want and <code>cd</code> into it.</p>
+<p>Using <code>fzf-tab</code> can save you time and reduce the frustration of tab cycling, making it another great way to use <code>fzf</code>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In this post, I've shared some of the workflows I use where <code>fzf</code> has improved my productivity and reduced my frustration. <code>fzf</code> is an incredibly versatile tool that can be used creatively to search and select anything using fuzzy searching.</p>
+<p>What's great about <code>fzf</code> is that it is highly customizable. You can add options to preview a file, select multiple items, and more. I'm always finding new ways to incorporate <code>fzf</code> into my workflows to improve my productivity.</p>
+<p>If you haven't tried <code>fzf</code> yet, I highly recommend giving it a try. It's a powerful tool that can help streamline your workflow and make your life easier on the command line.</p>
+
+  </div>
+
+  <footer class="post-foot">
+    <a href="https://sarat.dev/blog/_index.md"><span aria-hidden="true">←</span> All posts</a>
+  </footer>
+</article>
+
+    </main>
+
+    <footer class="site-foot">
+      <p>© 2026 Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+        <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

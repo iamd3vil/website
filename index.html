@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark"><title>Sarat Chandra · Thoughts on Programming, Tech and Life.</title>
+  <meta name="description" content="Thoughts on Programming, Tech and Life.">
+  <meta property="og:title" content="Sarat Chandra">
+  <meta property="og:description" content="Thoughts on Programming, Tech and Life.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sarat Chandra">
+  <meta property="og:url" content="https://sarat.dev/">
+  <link rel="canonical" href="https://sarat.dev/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@iamd3vil">
+
+  <link rel="alternate" type="application/rss+xml" title="Sarat Chandra" href="https://sarat.dev/index.xml">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">Sarat Chandra</a>
+      <nav class="nav" aria-label="Main">
+        <a href="https://sarat.dev/blog/">Blog</a>
+        <a href="https://sarat.dev/projects/">Projects</a>
+        <a href="https://sarat.dev/tags/">Tags</a>
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      <section class="intro">
+  <h1>Hello, I'm Sarat.</h1>
+  <p class="lede">
+    I'm a software engineer in Bengaluru, India, working on financial systems at Zerodha.
+    I've written Go and Elixir professionally since 2015 and reach for Rust on personal projects,
+    with Python and a little Nim along the way. Realtime and distributed systems are what keep me interested.
+  </p>
+  <p>
+    Away from the keyboard I read a lot, mostly fantasy. Brandon Sanderson is a favourite.
+    If you'd like to get in touch, write to <code>me at saratchandra.in</code>.
+  </p>
+  <ul class="intro-links">
+    <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+    <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+    <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+    <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+  </ul>
+</section>
+
+<section class="home-block">
+  <div class="block-head">
+    <h2>Writing</h2>
+    <a href="https://sarat.dev/blog/">All posts <span aria-hidden="true">→</span></a>
+  </div>
+  <ul class="post-list">
+    <li class="post-item">
+      <a href="https://sarat.dev/blog/mullvad-tailscale/">Using Mullvad VPN with Tailscale</a>
+      <time datetime="2026-03-23">Mar 2026</time>
+    </li>
+    <li class="post-item">
+      <a href="https://sarat.dev/blog/waitgroup-leaky-abstractions/">Using WaitGroups in Go without Leaky Abstractions</a>
+      <time datetime="2023-05-25">May 2023</time>
+    </li>
+    <li class="post-item">
+      <a href="https://sarat.dev/blog/fuzzy-search-fzf/">Fuzzy Search with fzf</a>
+      <time datetime="2023-04-28">Apr 2023</time>
+    </li>
+    <li class="post-item">
+      <a href="https://sarat.dev/blog/photos-nextcloud/">Photos Management with Nextcloud</a>
+      <time datetime="2023-03-27">Mar 2023</time>
+    </li>
+    <li class="post-item">
+      <a href="https://sarat.dev/blog/hosting-nextcloud/">My Nextcloud setup</a>
+      <time datetime="2020-12-04">Dec 2020</time>
+    </li>
+  </ul>
+</section>
+
+<section class="home-block">
+  <div class="block-head">
+    <h2>Projects</h2>
+    <a href="https://sarat.dev/projects/">All projects <span aria-hidden="true">→</span></a>
+  </div>
+  <ul class="post-list">
+    <li class="post-item">
+      <a href="https://github.com/iamd3vil/verbump" rel="noopener">Verbump</a>
+      <span class="lang lang-rust">Rust</span>
+      <p>A simple utility to bump git tags using semantic versioning.</p>
+    </li>
+    <li class="post-item">
+      <a href="https://github.com/iamd3vil/hedwig" rel="noopener">Hedwig</a>
+      <span class="lang lang-rust">Rust</span>
+      <p>A fast and efficient SMTP server.</p>
+    </li>
+    <li class="post-item">
+      <a href="https://github.com/iamd3vil/blobnom" rel="noopener">Blobnom</a>
+      <span class="lang lang-rust">Rust</span>
+      <p>A blob store based on SQLite.</p>
+    </li>
+    <li class="post-item">
+      <a href="https://github.com/iamd3vil/rlsr" rel="noopener">Rlsr</a>
+      <span class="lang lang-rust">Rust</span>
+      <p>A release manager.</p>
+    </li>
+  </ul>
+</section>
+
+    </main>
+
+    <footer class="site-foot">
+      <p>© 2026 Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/iamd3vil" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/iamd3vil" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/saratchandra92" rel="me noopener">Goodreads</a></li>
+        <li><a href="https://sarat.dev/index.xml">RSS</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>
