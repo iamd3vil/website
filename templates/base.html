@@ -38,7 +38,16 @@
   <link rel="alternate" type="application/rss+xml" title="{{ config.title }}" href="{{ get_url(path="index.xml", trailing_slash=false) | safe }}">
   <link rel="preload" href="/fonts/instrument-serif-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/geist-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/css/main.css">
+  <link id="site-css" rel="stylesheet" href="/css/main.css">
+  {#- TEMPORARY design-exploration switcher: /?variant=terminal|zine|brutal, /?variant= to reset. Remove once a direction is picked. -#}
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      if (q.has('variant')) localStorage.setItem('variant', q.get('variant'));
+      var v = localStorage.getItem('variant');
+      if (v) document.getElementById('site-css').href = '/css/variants/' + v + '.css';
+    })();
+  </script>
   <script>
     (function () {
       var t = localStorage.getItem('theme');
