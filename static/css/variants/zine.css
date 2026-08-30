@@ -376,6 +376,19 @@ pre code { background: none; padding: 0; }
 .foot-links { display: flex; gap: 1.25rem; }
 .foot-links a:hover { color: var(--mustard); }
 
+.style-switch { display: inline-flex; align-items: center; gap: 0.5rem; }
+.style-switch select {
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--mustard);
+  border: 2px solid var(--paper);
+  padding: 0.15rem 0.4rem;
+  cursor: pointer;
+}
+
 @media (max-width: 40rem) {
   .post-item { grid-template-columns: 2rem 1fr; }
   .post-item time, .post-item .lang { grid-column: 2; justify-self: start; margin-top: 0.4rem; }

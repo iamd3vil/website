@@ -347,6 +347,18 @@ pre code { background: none; padding: 0; color: inherit; }
 .foot-links { display: flex; gap: 1.25rem; }
 .foot-links a:hover { color: var(--accent); }
 
+.style-switch { display: inline-flex; align-items: center; gap: 0.5rem; }
+.style-switch::before { content: "$ "; }
+.style-switch select {
+  font: inherit;
+  color: var(--accent);
+  background: var(--bg-2);
+  border: 1px dashed var(--line);
+  padding: 0.1rem 0.4rem;
+  cursor: pointer;
+  text-shadow: none;
+}
+
 @media (max-width: 40rem) {
   body { font-size: 1.25rem; }
   .archive-year { grid-template-columns: 1fr; }

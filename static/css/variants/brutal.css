@@ -406,6 +406,18 @@ pre code { background: none; border: 0; padding: 0; }
 .foot-links { display: flex; gap: 1.25rem; }
 .foot-links a:hover { color: var(--yellow); }
 
+.style-switch { display: inline-flex; align-items: center; gap: 0.5rem; }
+.style-switch select {
+  font: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 2px solid var(--bg);
+  padding: 0.15rem 0.4rem;
+  cursor: pointer;
+}
+
 @media (max-width: 40rem) {
   .site-head { padding: 0.9rem 1rem; }
   .nav { gap: 0.4rem; font-size: 0.75rem; }
