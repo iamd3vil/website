@@ -36,15 +36,9 @@
   <meta name="twitter:site" content="@{{ config.extra.twitter }}">
 
   <link rel="alternate" type="application/rss+xml" title="{{ config.title }}" href="{{ get_url(path="index.xml", trailing_slash=false) | safe }}">
-  <link rel="preload" href="/fonts/instrument-serif-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/geist-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link id="site-css" rel="stylesheet" href="/css/main.css">
-  <script>
-    (function () {
-      var v = localStorage.getItem('variant');
-      if (v) document.getElementById('site-css').href = '/css/variants/' + v + '.css';
-    })();
-  </script>
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
   <script>
     (function () {
       var t = localStorage.getItem('theme');
@@ -83,26 +77,10 @@
         <li><a href="https://www.goodreads.com/{{ config.extra.goodreads }}" rel="me noopener">Goodreads</a></li>
         <li><a href="{{ get_url(path="index.xml", trailing_slash=false) | safe }}">RSS</a></li>
       </ul>
-      <label class="style-switch">Style
-        <select id="variant-select">
-          <option value="">Editorial</option>
-          <option value="terminal">Terminal</option>
-          <option value="zine">Zine</option>
-          <option value="brutal">Brutal</option>
-        </select>
-      </label>
     </footer>
   </div>
 
   <script>
-    var variantSelect = document.getElementById('variant-select');
-    variantSelect.value = localStorage.getItem('variant') || '';
-    variantSelect.addEventListener('change', function () {
-      var v = this.value;
-      if (v) localStorage.setItem('variant', v); else localStorage.removeItem('variant');
-      document.getElementById('site-css').href = v ? '/css/variants/' + v + '.css' : '/css/main.css';
-    });
-
     document.getElementById('theme-toggle').addEventListener('click', function () {
       var root = document.documentElement;
       var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
