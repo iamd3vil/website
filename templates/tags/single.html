@@ -1,34 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="prose" style="margin-bottom: 3rem;">
-  <h2>Tag: {{ term.name | title }}</h2>
-</div>
+<header class="page-head">
+  <p class="eyebrow">Tagged</p>
+  <h1>{{ term.name }}</h1>
+</header>
 
-<div class="post-grid">
-  {% for post in term.pages %}
-    <article class="post-card">
-      <a href="{{ post.permalink | safe }}" class="post-card-link">
-        <div class="post-card-content">
-          <header class="post-card-header">
-            <time class="post-date" datetime="{{ post.date }}">
-              {{ post.date | date(format='%B %d, %Y') }}
-            </time>
-            <h2 class="post-title">{{ post.title }}</h2>
-          </header>
-          
-          {% if post.description %}
-          <div class="post-excerpt">
-            {{ post.description }}
-          </div>
-          {% endif %}
-          
-          <div class="post-meta">
-            <span class="read-more">Read article &rarr;</span>
-          </div>
-        </div>
-      </a>
-    </article>
-  {% endfor %}
-</div>
+<ul class="post-list">
+  {%- for post in term.pages %}
+  <li class="post-item">
+    <a href="{{ post.permalink | safe }}">{{ post.title }}</a>
+    <time datetime="{{ post.date }}">{{ post.date | date(format="%b %d, %Y") }}</time>
+    {%- if post.description %}
+    <p>{{ post.description }}</p>
+    {%- endif %}
+  </li>
+  {%- endfor %}
+</ul>
+
+<p class="back"><a href="{{ get_url(path="tags") | safe }}"><span aria-hidden="true">←</span> All tags</a></p>
 {% endblock content %}

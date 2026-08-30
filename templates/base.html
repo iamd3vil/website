@@ -1,121 +1,91 @@
-{% import "macros/head.html" as head -%}
-{% import "macros/opengraph.html" as social -%}
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  {%- block general_meta -%}
-    {{ head::general_meta() }}
-  {%- endblock general_meta -%}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
 
-  {%- block og_preview -%}
-    {{ social::og_preview() }}
-  {%- endblock og_preview -%}
+  {%- if page is defined -%}
+    {%- set meta_title = page.title -%}
+    {%- set meta_desc = page.description if page.description else config.description -%}
+  {%- elif term is defined -%}
+    {%- set meta_title = term.name -%}
+    {%- set meta_desc = config.description -%}
+  {%- elif taxonomy is defined -%}
+    {%- set meta_title = taxonomy.name | title -%}
+    {%- set meta_desc = config.description -%}
+  {%- elif section is defined and section.title -%}
+    {%- set meta_title = section.title -%}
+    {%- set meta_desc = section.description if section.description else config.description -%}
+  {%- else -%}
+    {%- set meta_title = "" -%}
+    {%- set meta_desc = config.description -%}
+  {%- endif -%}
 
-  {% block rss %}
-    <link rel="alternate" type="application/rss+xml" title="{{config.title}}"
-    href="{{ get_url(path="index.xml", trailing_slash=false) | safe}}">
-  {% endblock %}
+  <title>{% if meta_title %}{{ meta_title }} · {{ config.title }}{% else %}{{ config.title }} · {{ config.description }}{% endif %}</title>
+  <meta name="description" content="{{ meta_desc }}">
+  <meta property="og:title" content="{% if meta_title %}{{ meta_title }}{% else %}{{ config.title }}{% endif %}">
+  <meta property="og:description" content="{{ meta_desc }}">
+  <meta property="og:type" content="{% if page is defined %}article{% else %}website{% endif %}">
+  <meta property="og:site_name" content="{{ config.title }}">
+  {%- if current_url is defined %}
+  <meta property="og:url" content="{{ current_url | safe }}">
+  <link rel="canonical" href="{{ current_url | safe }}">
+  {%- endif %}
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@{{ config.extra.twitter }}">
 
+  <link rel="alternate" type="application/rss+xml" title="{{ config.title }}" href="{{ get_url(path="index.xml", trailing_slash=false) | safe }}">
+  <link rel="preload" href="/fonts/abril-fatface-normal-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/work-sans-normal-400700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/main.css">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
   </script>
 </head>
 
 <body>
-  <div class="site-wrapper">
-    {% block header %}
-      <header class="site-header">
-        <div class="header-main">
-          <div class="brand">
-            <h1><a href="/">{{ config.title }}</a></h1>
-            <p class="tagline">{{ config.description }}</p>
-          </div>
-          
-          <div class="social-links">
-            <ul>
-              <li>
-                <a href="https://github.com/{{ config.extra.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                </a>
-              </li>
-              <li>
-                <a href="https://twitter.com/{{ config.extra.twitter }}" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53a4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-                </a>
-              </li>
-              <li>
-                <a href="https://www.goodreads.com/{{ config.extra.goodreads }}" target="_blank" rel="noopener noreferrer" aria-label="Goodreads">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                </a>
-              </li>
-              <li>
-                <a href="{{ get_url(path="index.xml", trailing_slash=false) | safe}}" aria-label="RSS">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
-                </a>
-              </li>
-              <li>
-                <button id="theme-toggle" aria-label="Toggle dark mode">
-                  <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                  <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </header>
-    {% endblock header %}
-    
-    {% block nav %}
-      <nav class="site-nav" role="navigation" aria-label="Main navigation">
-        <ul class="nav-list">
-          {% for link in config.extra.links %}
-          {% set link_url = link.link | replace(from="$BASE_URL", to=config.base_url) %}
-          <li><a {% if current_url and current_url == link_url %}class="active" {% endif %} href="{{ link_url }}">{{ link.title }}</a></li>
-          {% endfor %}
-        </ul>
+  <div class="wrap">
+    <header class="site-head">
+      <a class="wordmark" href="/">{{ config.title }}</a>
+      <nav class="nav" aria-label="Main">
+        {%- for link in config.extra.links %}
+          {%- set link_url = link.link | replace(from="$BASE_URL", to=config.base_url) %}
+        <a href="{{ link_url }}"{% if current_url is defined and link_url in current_url %} class="active"{% endif %}>{{ link.title }}</a>
+        {%- endfor %}
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle colour scheme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
       </nav>
-    {% endblock %}
-    
-    <main class="site-content" role="main">
-      {% block content %} {% endblock %}
+    </header>
+
+    <main class="site-main">
+      {% block content %}{% endblock content %}
     </main>
-    
-    {% block footer %}
-      <footer class="site-footer" role="contentinfo">
-        <div class="footer-content">
-          <p>{{ config.extra.copyright }}</p>
-        </div>
-      </footer>
-    {% endblock footer %}
+
+    <footer class="site-foot">
+      <p>© {{ now() | date(format="%Y") }} Sarat Chandra</p>
+      <ul class="foot-links">
+        <li><a href="https://github.com/{{ config.extra.github }}" rel="me noopener">GitHub</a></li>
+        <li><a href="https://twitter.com/{{ config.extra.twitter }}" rel="me noopener">Twitter</a></li>
+        <li><a href="https://www.goodreads.com/{{ config.extra.goodreads }}" rel="me noopener">Goodreads</a></li>
+        <li><a href="{{ get_url(path="index.xml", trailing_slash=false) | safe }}">RSS</a></li>
+      </ul>
+    </footer>
   </div>
+
   <script>
-    const toggle = document.getElementById('theme-toggle');
-    const sun = document.getElementById('sun-icon');
-    const moon = document.getElementById('moon-icon');
-    
-    function updateIcon() {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      sun.style.display = isDark ? 'block' : 'none';
-      moon.style.display = isDark ? 'none' : 'block';
-    }
-    
-    updateIcon();
-    
-    toggle.addEventListener('click', () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const next = isDark ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.theme = next;
-      updateIcon();
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
     });
   </script>
 </body>

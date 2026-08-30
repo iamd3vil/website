@@ -8,6 +8,7 @@ draft = false
 [taxonomies]
 tags = ["Self Hosting"]
 +++
+{% raw %}
 
 Me and my family uploads most of our photos on Google Photos. This always bothered me since this is one of the most important data we have and we are relying on the promise of unlimited storage by Google. Even then we are losing the original quality photos and uploading lossy photos (what google calls High Quality Photos) to get the unlimited storage. I always wanted to find a good alternative for this. I investigated several alternatives for taking backup of photos from our mobiles. Although there are several cloud services which does this, I didn't want to rely on another cloud service and wanted to self host this. I finally settled on `Syncthing` for myself.
 
@@ -126,3 +127,4 @@ Another way is to add a new volume and then add that volume to the pool. There i
 Nextcloud is a good alternative to all the proprietary clouds. It has a lot of quirks sure but this is being improved constantly. It isn't really a real alternative to something like Google Photos which not only backs up the photos automatically but magically tags the photos with people & items in the photos (and other crazy ML shit Google does), but for backing up, Nextcloud **is** a good alternative.
 
 I plan to explore [Photoprism](https://github.com/photoprism/photoprism) as an alternative to Google Photos for their ML magic.
+{% endraw %}

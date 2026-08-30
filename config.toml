@@ -28,8 +28,6 @@ taxonomies = [ { name = "tags", feed = true } ]
 [markdown]
 
 [markdown.highlighting]
-# Whether to do syntax highlighting
-enabled = true
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 theme = "dracula"
 
@@ -38,11 +36,6 @@ theme = "dracula"
 github = "iamd3vil"
 twitter = "iamd3vil"
 goodreads = "saratchandra92"
-copyright = "Made with ❤️ by Sarat Chandra. Copyright 2026."
-
-[[extra.links]]
-title = "Home"
-link = "$BASE_URL/"
 
 [[extra.links]]
 title = "Blog"

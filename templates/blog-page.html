@@ -1,34 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<article class="post-full">
-  <header class="post-full-header">
-    <div class="post-meta-top">
-      <time datetime="{{ page.date }}">{{ page.date | date(format='%B %d, %Y') }}</time>
-      {% if page.reading_time %}
-        <span class="separator">&bull;</span>
-        <span class="reading-time">{{ page.reading_time }} min read</span>
-      {% endif %}
-    </div>
-    
-    <h1 class="post-full-title">{{ page.title }}</h1>
-    
-    {% if page.description %}
-    <p class="post-full-description">{{ page.description }}</p>
-    {% endif %}
-    
-    {% if page.taxonomies.tags %}
-    <div class="post-tags">
-      {% for tag in page.taxonomies.tags %}
-      {% set url = get_taxonomy_url(kind="tags", name=tag) %}
-      <a href="{{ url }}" class="tag-pill">#{{ tag }}</a>
-      {% endfor %}
-    </div>
-    {% endif %}
+<article class="post">
+  <header class="post-head">
+    <h1>{{ page.title }}</h1>
+    <p class="post-meta">
+      <time datetime="{{ page.date }}">{{ page.date | date(format="%B %d, %Y") }}</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>{{ page.reading_time }} min read</span>
+      {%- if page.taxonomies.tags %}
+      <span class="dot" aria-hidden="true">·</span>
+      {%- for tag in page.taxonomies.tags %}
+      <a class="tag" href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}">{{ tag }}</a>
+      {%- endfor %}
+      {%- endif %}
+    </p>
   </header>
-  
-  <div class="post-content prose">
+
+  <div class="prose">
     {{ page.content | safe }}
   </div>
+
+  <footer class="post-foot">
+    <a href="{{ get_url(path="blog/_index.md") | safe }}"><span aria-hidden="true">←</span> All posts</a>
+  </footer>
 </article>
 {% endblock content %}

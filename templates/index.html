@@ -1,15 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="about">
-  <h4>About Me</h4>
-  <p>
-  I am Sarat Chandra and I live in Bengaluru, India. I work at Zerodha. 
-  I love Rust, Go, Elixir, Python but have dabbled with Nim. Working on financial systems. Using Go and Elixir professionally from 2015 and Rust for my personal projects. Interested in Realtime and Distributed systems.
-  </p>
+{%- set blog = get_section(path="blog/_index.md") -%}
+{%- set projects = get_page(path="projects.md") -%}
 
-  <p>
-  Obsessed with reading books, especially fantasy. My favorite author is Brandon Sanderson. If you want to contact me, hit me up at <code>me at saratchandra.in</code>
+<section class="intro">
+  <h1>Hello, I'm Sarat.</h1>
+  <p class="lede">
+    I'm a software engineer in Bengaluru, India, working on financial systems at Zerodha.
+    I've written Go and Elixir professionally since 2015 and reach for Rust on personal projects,
+    with Python and a little Nim along the way. Realtime and distributed systems are what keep me interested.
   </p>
+  <p>
+    Away from the keyboard I read a lot, mostly fantasy. Brandon Sanderson is a favourite.
+    If you'd like to get in touch, write to <code>me at saratchandra.in</code>.
+  </p>
+  <ul class="intro-links">
+    <li><a href="https://github.com/{{ config.extra.github }}" rel="me noopener">GitHub</a></li>
+    <li><a href="https://twitter.com/{{ config.extra.twitter }}" rel="me noopener">Twitter</a></li>
+    <li><a href="https://www.goodreads.com/{{ config.extra.goodreads }}" rel="me noopener">Goodreads</a></li>
+    <li><a href="{{ get_url(path="index.xml", trailing_slash=false) | safe }}">RSS</a></li>
+  </ul>
+</section>
+
+<section class="home-block">
+  <div class="block-head">
+    <h2>Writing</h2>
+    <a href="{{ blog.permalink | safe }}">All posts <span aria-hidden="true">→</span></a>
+  </div>
+  <ul class="post-list">
+    {%- for post in blog.pages[:5] %}
+    <li class="post-item">
+      <a href="{{ post.permalink | safe }}">{{ post.title }}</a>
+      <time datetime="{{ post.date }}">{{ post.date | date(format="%b %Y") }}</time>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+
+<section class="home-block">
+  <div class="block-head">
+    <h2>Projects</h2>
+    <a href="{{ projects.permalink | safe }}">All projects <span aria-hidden="true">→</span></a>
+  </div>
+  <ul class="post-list">
+    {%- for project in projects.extra.projects[:4] %}
+    <li class="post-item">
+      <a href="{{ project.url }}" rel="noopener">{{ project.name }}</a>
+      <span class="lang lang-{{ project.language | lower }}">{{ project.language }}</span>
+      <p>{{ project.description }}</p>
+    </li>
+    {%- endfor %}
+  </ul>
 </section>
 {% endblock content %}
